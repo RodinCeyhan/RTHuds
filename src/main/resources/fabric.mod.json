@@ -1,0 +1,31 @@
+{
+  "schemaVersion": 1,
+  "id": "rthuds",
+  "version": "${mod_version}",
+  "name": "RTHuds",
+  "description": "Shows coordinates, viewpoint, direction, FPS and more.",
+  "authors": [
+    "RodinToprak"
+  ],
+  "license": "MIT",
+  "icon": "assets/rthuds/textures/rthuds.png",
+  "environment": "client",
+  "entrypoints": {
+    "client": ["com.rtc.client.RTHudsClient"],
+    "modmenu": [
+      "com.rtc.client.integration.RthudsModMenuIntegration"
+    ]
+  },
+  "depends": {
+    "fabric": "*",
+    "fabricloader": "*",
+    "minecraft": ">=1.21.9",
+    "java": ">=${java_version}"
+  },
+  "recommends": {
+    "modmenu": "*"
+  },
+  "mixins": [
+    "rthuds.client.mixins.json"
+  ]
+}
