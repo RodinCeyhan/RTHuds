@@ -5,7 +5,7 @@ import net.fabricmc.fabric.api.client.rendering.v1.HudRenderCallback;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.DeltaTracker;
-import net.minecraft.client.renderer.RenderType;
+import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
@@ -142,14 +142,14 @@ public class ArmorHUD {
         ItemStack stack = player.getItemBySlot(slot);
 
         var pose = g.pose();
-        pose.pushPose();
-        pose.translate(x, y, 0);
-        pose.scale(scale, scale, 1.0F);
-        pose.translate(-x, -y, 0);
+        pose.pushMatrix();
+        pose.translate(x, y);
+        pose.scale(scale, scale);
+        pose.translate(-x, -y);
 
         if (stack.isEmpty()) {
             if (HudConfig.configManager.getConfig().ShowEmpytSlot) {
-                g.blit(RenderType::guiTextured, emptyTexture, x, y, 0, 0, 16, 16, 16, 16);
+                g.blit(RenderPipelines.GUI_TEXTURED, emptyTexture, x, y, 0, 0, 16, 16, 16, 16);
             }
         } else {
             g.renderItem(stack, x, y);
@@ -157,7 +157,7 @@ public class ArmorHUD {
                 g.renderItemDecorations(mc.font, stack, x, y);
             }
         }
-        pose.popPose();
+        pose.popMatrix();
 
         String durability = getDurabilityText(stack);
         var line = Component.literal(durability).withColor(HudConfig.configManager.getConfig().ArmorTextColor.color);
