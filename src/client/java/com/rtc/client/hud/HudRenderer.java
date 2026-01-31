@@ -56,8 +56,8 @@ public class HudRenderer {
         if (player == null) return;
 
         var camera = mc.gameRenderer.getMainCamera();
-        float yaw = Mth.wrapDegrees(camera.yRot());
-        float pitch = camera.xRot();
+        float yaw = Mth.wrapDegrees(camera.getYRot());
+        float pitch = camera.getXRot();
 
         List<Component> lines = new ArrayList<>();
         int valueColor = HudColor.WHITE.color;

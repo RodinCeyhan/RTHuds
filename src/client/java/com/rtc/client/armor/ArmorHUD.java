@@ -5,22 +5,22 @@ import net.fabricmc.fabric.api.client.rendering.v1.HudRenderCallback;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.DeltaTracker;
-import net.minecraft.client.renderer.RenderPipelines;
+import net.minecraft.client.renderer.RenderType;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.resources.Identifier;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.network.chat.Component;
 
 @SuppressWarnings({"deprecation", "unused", "UnnecessaryLocalVariable"})
 public class ArmorHUD {
 
-    private static final Identifier EMPTY_HELMET = Identifier.fromNamespaceAndPath("rthuds", "textures/helmet.png");
-    private static final Identifier EMPTY_CHEST = Identifier.fromNamespaceAndPath("rthuds", "textures/chestplate.png");
-    private static final Identifier EMPTY_LEGS = Identifier.fromNamespaceAndPath("rthuds", "textures/leggings.png");
-    private static final Identifier EMPTY_BOOTS = Identifier.fromNamespaceAndPath("rthuds", "textures/boots.png");
-    private static final Identifier EMPTY_HAND = Identifier.fromNamespaceAndPath("rthuds", "textures/sword.png");
-    private static final Identifier EMPTY_OFFHAND = Identifier.fromNamespaceAndPath("rthuds", "textures/shield.png");
+    private static final ResourceLocation EMPTY_HELMET = ResourceLocation.fromNamespaceAndPath("rthuds", "textures/helmet.png");
+    private static final ResourceLocation EMPTY_CHEST = ResourceLocation.fromNamespaceAndPath("rthuds", "textures/chestplate.png");
+    private static final ResourceLocation EMPTY_LEGS = ResourceLocation.fromNamespaceAndPath("rthuds", "textures/leggings.png");
+    private static final ResourceLocation EMPTY_BOOTS = ResourceLocation.fromNamespaceAndPath("rthuds", "textures/boots.png");
+    private static final ResourceLocation EMPTY_HAND = ResourceLocation.fromNamespaceAndPath("rthuds", "textures/sword.png");
+    private static final ResourceLocation EMPTY_OFFHAND = ResourceLocation.fromNamespaceAndPath("rthuds", "textures/shield.png");
 
     private static final int BASE_ICON_SIZE = 16;
     private static final int BASE_GAP = 2;
@@ -136,20 +136,20 @@ public class ArmorHUD {
     }
 
     private static void renderSlot(GuiGraphics g, Minecraft mc, Player player,
-                                   EquipmentSlot slot, Identifier emptyTexture,
+                                   EquipmentSlot slot, ResourceLocation emptyTexture,
                                    int x, int y, float scale) {
 
         ItemStack stack = player.getItemBySlot(slot);
 
         var pose = g.pose();
-        pose.pushMatrix();
-        pose.translate(x, y);
-        pose.scale(scale, scale);
-        pose.translate(-x, -y);
+        pose.pushPose();
+        pose.translate(x, y, 0);
+        pose.scale(scale, scale, 1.0F);
+        pose.translate(-x, -y, 0);
 
         if (stack.isEmpty()) {
             if (HudConfig.configManager.getConfig().ShowEmpytSlot) {
-                g.blit(RenderPipelines.GUI_TEXTURED, emptyTexture, x, y, 0, 0, 16, 16, 16, 16);
+                g.blit(RenderType::guiTextured, emptyTexture, x, y, 0, 0, 16, 16, 16, 16);
             }
         } else {
             g.renderItem(stack, x, y);
@@ -157,7 +157,7 @@ public class ArmorHUD {
                 g.renderItemDecorations(mc.font, stack, x, y);
             }
         }
-        pose.popMatrix();
+        pose.popPose();
 
         String durability = getDurabilityText(stack);
         var line = Component.literal(durability).withColor(HudConfig.configManager.getConfig().ArmorTextColor.color);

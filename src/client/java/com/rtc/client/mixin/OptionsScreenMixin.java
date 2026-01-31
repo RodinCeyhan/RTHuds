@@ -2,8 +2,8 @@ package com.rtc.client.mixin;
 
 import com.rtc.client.gui.SettingsScreen;
 import net.minecraft.client.gui.screens.options.OptionsScreen;
-import net.minecraft.client.renderer.RenderPipelines;
-import net.minecraft.resources.Identifier;
+import net.minecraft.client.renderer.RenderType;
+import net.minecraft.resources.ResourceLocation;
 import org.jetbrains.annotations.NotNull;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
@@ -28,7 +28,7 @@ import java.util.List;
 public abstract class OptionsScreenMixin extends Screen {
 
     @Unique
-    private static final Identifier SETTINGS = Identifier.fromNamespaceAndPath("rthuds", "textures/settings_9x8.png");
+    private static final ResourceLocation SETTINGS = ResourceLocation.fromNamespaceAndPath("rthuds", "textures/settings_9x8.png");
 
     @Unique
     public Button RTHButton = null;
@@ -108,6 +108,6 @@ public abstract class OptionsScreenMixin extends Screen {
 
         int drawX = centerX - (textureWidth / 2);
         int drawY = centerY - (textureHeight / 2);
-        guiGraphics.blit(RenderPipelines.GUI_TEXTURED, SETTINGS, drawX, drawY, 0, 0, textureWidth, textureHeight, textureWidth, textureHeight);
+        guiGraphics.blit(RenderType::guiTextured, SETTINGS, drawX, drawY, 0, 0, textureWidth, textureHeight, textureWidth, textureHeight);
     }
 }
