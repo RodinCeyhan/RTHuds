@@ -5,14 +5,14 @@ import net.fabricmc.fabric.api.client.rendering.v1.HudRenderCallback;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.DeltaTracker;
-import net.minecraft.client.renderer.RenderPipelines;
+import net.minecraft.client.renderer.RenderType;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.network.chat.Component;
 
-@SuppressWarnings({"deprecation", "unused", "UnnecessaryLocalVariable"})
+@SuppressWarnings({"unused", "UnnecessaryLocalVariable"})
 public class ArmorHUD {
 
     private static final ResourceLocation EMPTY_HELMET = ResourceLocation.fromNamespaceAndPath("rthuds", "textures/helmet.png");
@@ -142,14 +142,14 @@ public class ArmorHUD {
         ItemStack stack = player.getItemBySlot(slot);
 
         var pose = g.pose();
-        pose.pushMatrix();
-        pose.translate(x, y);
-        pose.scale(scale, scale);
-        pose.translate(-x, -y);
+        pose.pushPose();
+        pose.translate(x, y, 0);
+        pose.scale(scale, scale, 1.0F);
+        pose.translate(-x, -y, 0);
 
         if (stack.isEmpty()) {
             if (HudConfig.configManager.getConfig().ShowEmpytSlot) {
-                g.blit(RenderPipelines.GUI_TEXTURED, emptyTexture, x, y, 0, 0, 16, 16, 16, 16);
+                g.blit(RenderType::guiTextured, emptyTexture, x, y, 0, 0, 16, 16, 16, 16);
             }
         } else {
             g.renderItem(stack, x, y);
@@ -157,7 +157,7 @@ public class ArmorHUD {
                 g.renderItemDecorations(mc.font, stack, x, y);
             }
         }
-        pose.popMatrix();
+        pose.popPose();
 
         String durability = getDurabilityText(stack);
         var line = Component.literal(durability).withColor(HudConfig.configManager.getConfig().ArmorTextColor.color);

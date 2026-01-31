@@ -28,7 +28,6 @@ public class HudRenderer {
         int places;
 
         if (decimalPlaces == 6) {
-            // özel durum
             places = (axis == Axis.Y) ? 5 : 3;
         } else {
             places = Math.max(0, Math.min(decimalPlaces, 5));
