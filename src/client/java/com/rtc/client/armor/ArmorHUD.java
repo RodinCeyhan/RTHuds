@@ -5,7 +5,6 @@ import net.fabricmc.fabric.api.client.rendering.v1.HudRenderCallback;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.DeltaTracker;
-import net.minecraft.client.renderer.RenderType;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
@@ -149,7 +148,7 @@ public class ArmorHUD {
 
         if (stack.isEmpty()) {
             if (HudConfig.configManager.getConfig().ShowEmpytSlot) {
-                g.blit(RenderType::guiTextured, emptyTexture, x, y, 0, 0, 16, 16, 16, 16);
+                g.blit(emptyTexture, x, y, 0, 0, 16, 16, 16, 16);
             }
         } else {
             g.renderItem(stack, x, y);
