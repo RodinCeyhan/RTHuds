@@ -2,6 +2,7 @@
   "key.rthuds.toggle": "Toggle HUD",
   "key.rthuds.settignsmenu": "Settings",
   "key.rthuds.togglearmor": "Toggle Armor HUD",
+  "key.categories.rthuds": "RTHuds",
   "rthuds.hud.direction.south": "South",
   "rthuds.hud.direction.southwest": "South West",
   "rthuds.hud.direction.west": "West",
