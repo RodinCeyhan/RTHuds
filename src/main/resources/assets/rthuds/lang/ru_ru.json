@@ -2,6 +2,7 @@
   "key.rthuds.toggle": "Вкл/Выкл HUD",
   "key.rthuds.settignsmenu": "Настройки",
   "key.rthuds.togglearmor": "Переключить HUD брони",
+  "key.category.minecraft.key.categories.rthuds": "RTHuds",
   "rthuds.hud.direction.south": "Юг",
   "rthuds.hud.direction.southwest": "Юго-Запад",
   "rthuds.hud.direction.west": "Запад",

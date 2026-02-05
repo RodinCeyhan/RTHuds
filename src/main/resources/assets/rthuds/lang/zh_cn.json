@@ -2,6 +2,7 @@
   "key.rthuds.toggle": "切换 HUD",
   "key.rthuds.settignsmenu": "设置",
   "key.rthuds.togglearmor": "切换盔甲HUD",
+  "key.category.minecraft.key.categories.rthuds": "RTHuds",
   "rthuds.hud.direction.south": "南",
   "rthuds.hud.direction.southwest": "西南",
   "rthuds.hud.direction.west": "西",
