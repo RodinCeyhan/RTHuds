@@ -2,6 +2,7 @@
   "key.rthuds.toggle": "HUD 切り替え",
   "key.rthuds.settignsmenu": "設定",
   "key.rthuds.togglearmor": "アーマーHUDの切り替え",
+  "key.categories.rthuds": "RTHuds",
   "rthuds.hud.direction.south": "南",
   "rthuds.hud.direction.southwest": "南西",
   "rthuds.hud.direction.west": "西",
