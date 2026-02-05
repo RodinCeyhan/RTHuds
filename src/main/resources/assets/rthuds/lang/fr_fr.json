@@ -2,6 +2,7 @@
   "key.rthuds.toggle": "Basculer le HUD",
   "key.rthuds.settignsmenu": "Paramètres",
   "key.rthuds.togglearmor": "Afficher/masquer l'interface d'armure",
+  "key.categories.rthuds": "RTHuds",
   "rthuds.hud.direction.south": "Sud",
   "rthuds.hud.direction.southwest": "Sud-Ouest",
   "rthuds.hud.direction.west": "Ouest",
