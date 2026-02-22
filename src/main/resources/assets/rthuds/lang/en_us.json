@@ -34,7 +34,7 @@
   "rthuds.settings.decimal_places": "Coordinate Precision: ",
   "rthuds.settings.decimal_places.default": "DEFAULT",
   "rthuds.config.option.background_style.tooltip": "You can change the Text Background from None to Light or Full.",
-  "rthuds.settings.background": "Backgorund: ",
+  "rthuds.settings.background": "InfoHUD Backgorund: ",
   "rthuds.settings.background.none": "TRANSPARENT",
   "rthuds.settings.background.light": "LIGHT",
   "rthuds.settings.background.full": "FULL",
@@ -95,5 +95,12 @@
   "rthuds.config.option.layout": "Layout",
   "rthuds.config.option.layout.tooltip": "Sets the layout in which the HUD is displayed.",
   "rthuds.config.option.layout.LAYOUT_1": "HORIZONTAL",
-  "rthuds.config.option.layout.LAYOUT_2": "VERTICAL"
+  "rthuds.config.option.layout.LAYOUT_2": "VERTICAL",
+  "rthuds.settings.hud_x": "Info HUD X: ",
+  "rthuds.settings.hud_x.tooltip": "You can adjust the X position of the information HUD.",
+  "rthuds.settings.hud_y": "Info HUD Y: ",
+  "rthuds.settings.hud_y.tooltip": "You can adjust the Y position of the information HUD.",
+  "rthuds.settings.reset.general": "Reset",
+  "rthuds.settings.armor.background.tooltip": "Change the Armor HUD background to None, Light, or Full.",
+  "rthuds.settings.armor.background": "ArmorHUD Background: "
 }
