@@ -49,6 +49,27 @@ public class SettingsOptions {
             });
 
     // Appearance Settings
+    public static final OptionInstance<Integer> ARMOR_BACKGROUND_STYLE = new OptionInstance<>(
+            "rthuds.settings.background",
+            (value) -> Tooltip.create(Component.translatable("rthuds.config.option.background_style.tooltip")),
+            (caption, value) -> {
+                ModConfig.ArmorBackgroundStyle style = ModConfig.ArmorBackgroundStyle.values()[value];
+                return switch (style) {
+                    case NONE ->
+                            Component.translatable("rthuds.settings.background").append(Component.translatable("rthuds.settings.background.none"));
+                    case LIGHT ->
+                            Component.translatable("rthuds.settings.background").append(Component.translatable("rthuds.settings.background.light"));
+                    case FULL ->
+                            Component.translatable("rthuds.settings.background").append(Component.translatable("rthuds.settings.background.full"));
+                };
+            },
+            new OptionInstance.IntRange(0, ModConfig.ArmorBackgroundStyle.values().length - 1),
+            HudConfig.configManager.getConfig().armorBackgroundStyle.ordinal(),
+            value -> {
+                HudConfig.configManager.getConfig().armorBackgroundStyle = ModConfig.ArmorBackgroundStyle.values()[value];
+                HudConfig.configManager.save();
+            }
+    );
     public static final OptionInstance<Boolean> INFOHUD_TEXT_SHADOW = OptionInstance.createBoolean(
             "rthuds.textshadow.info",
             OptionInstance.cachedConstantTooltip(Component.translatable("rthuds.config.option.text_shadow.tooltip")),
@@ -79,7 +100,7 @@ public class SettingsOptions {
                 HudConfig.configManager.save();
             }
     );
-    public static final OptionInstance<Integer> BACKGROUND_STYLE = new OptionInstance<>(
+    public static final OptionInstance<Integer> INFO_BACKGROUND_STYLE = new OptionInstance<>(
             "rthuds.settings.background",
             (value) -> Tooltip.create(Component.translatable("rthuds.config.option.background_style.tooltip")),
             (caption, value) -> {
@@ -97,31 +118,6 @@ public class SettingsOptions {
             HudConfig.configManager.getConfig().backgroundStyle.ordinal(),
             value -> {
                 HudConfig.configManager.getConfig().backgroundStyle = ModConfig.BackgroundStyle.values()[value];
-                HudConfig.configManager.save();
-            }
-    );
-    public static final OptionInstance<ModConfig.HUDLocation> INFOHUD_LOCATION = new OptionInstance<>(
-            "rthuds.settings.location.info",
-            OptionInstance.cachedConstantTooltip(Component.translatable("rthuds.settings.location.tooltip")),
-            (caption, value) -> {
-                return switch (value) {
-                    case LEFTUP -> Component.translatable("rthuds.settings.location.leftup");
-                    case LEFTDOWN -> Component.translatable("rthuds.settings.location.leftdown");
-                    case CENTERUP -> Component.translatable("rthuds.settings.location.centerup");
-                    case RIGHTUP -> Component.translatable("rthuds.settings.location.rightup");
-                    case RIGHTDOWN -> Component.translatable("rthuds.settings.location.rightdown");
-                };
-            },
-            new OptionInstance.Enum<>(
-                    Arrays.asList(ModConfig.HUDLocation.values()),
-                    Codec.INT.xmap(
-                            i -> ModConfig.HUDLocation.values()[Math.min(i, ModConfig.HUDLocation.values().length - 1)],
-                            c -> Arrays.asList(ModConfig.HUDLocation.values()).indexOf(c)
-                    )
-            ),
-            HudConfig.configManager.getConfig().ScreenLocation,
-            value -> {
-                HudConfig.configManager.getConfig().ScreenLocation = value;
                 HudConfig.configManager.save();
             }
     );
@@ -236,6 +232,33 @@ public class SettingsOptions {
                 HudConfig.configManager.save();
             }
     );
+    public static final OptionInstance<Integer> INFO_HUD_X =
+            new OptionInstance<>(
+                    "rthuds.settings.hud_x",
+                    OptionInstance.cachedConstantTooltip(Component.translatable("rthuds.settings.hud_x.tooltip")),
+                    (optionText, value) ->
+                            Component.translatable("rthuds.settings.hud_x").append(Component.literal("%" + value)),
+                    new OptionInstance.IntRange(0, 100),
+                    HudConfig.configManager.getConfig().hudXPercent,
+                    (newValue) -> {
+                        HudConfig.configManager.getConfig().hudXPercent = newValue;
+                        HudConfig.configManager.save();
+                    }
+            );
+
+    public static final OptionInstance<Integer> INFO_HUD_Y =
+            new OptionInstance<>(
+                    "rthuds.settings.hud_y",
+                    OptionInstance.cachedConstantTooltip(Component.translatable("rthuds.settings.hud_y.tooltip")),
+                    (optionText, value) ->
+                            Component.translatable("rthuds.settings.hud_y").append(Component.literal("%" + value)),
+                    new OptionInstance.IntRange(0, 100),
+                    HudConfig.configManager.getConfig().hudYPercent,
+                    (newValue) -> {
+                        HudConfig.configManager.getConfig().hudYPercent = newValue;
+                        HudConfig.configManager.save();
+                    }
+            );
 
 
     // Color Settings

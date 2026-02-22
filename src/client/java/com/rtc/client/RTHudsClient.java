@@ -12,6 +12,8 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.Style;
 
+import static com.rtc.client.gui.SettingsOptions.*;
+
 @SuppressWarnings("unused")
 public class RTHudsClient implements ClientModInitializer {
 
@@ -30,6 +32,7 @@ public class RTHudsClient implements ClientModInitializer {
                 HudConfig.configManager.getConfig().showHud = !HudConfig.configManager.getConfig().showHud;
                 HudConfig.configManager.save();
                 boolean newState = HudConfig.configManager.getConfig().showHud;
+                SHOW_HUD.set(newState);
                 Component stateText = Component.translatable(newState ? "rthuds.option.on" : "rthuds.option.off");
                 ChatFormatting color = newState ? ChatFormatting.GREEN : ChatFormatting.RED;
                 Component coloredState = stateText.copy().withStyle(Style.EMPTY.withColor(color).withBold(true));
@@ -50,6 +53,7 @@ public class RTHudsClient implements ClientModInitializer {
                 HudConfig.configManager.getConfig().ArmorHUD = !HudConfig.configManager.getConfig().ArmorHUD;
                 HudConfig.configManager.save();
                 boolean newState = HudConfig.configManager.getConfig().ArmorHUD;
+                SHOW_ARMOR_HUD.set(newState);
                 Component stateText = Component.translatable(newState ? "rthuds.option.on" : "rthuds.option.off");
                 ChatFormatting color = newState ? ChatFormatting.GREEN : ChatFormatting.RED;
                 Component coloredState = stateText.copy().withStyle(Style.EMPTY.withColor(color).withBold(true));

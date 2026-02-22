@@ -2,7 +2,7 @@
   "key.rthuds.toggle": "Εναλλαγή HUD",
   "key.rthuds.settignsmenu": "Ρυθμίσεις",
   "key.rthuds.togglearmor": "Εναλλαγή HUD θωράκισης",
-  "key.categories.rthuds": "RTHuds",
+  "key.category.minecraft.key.categories.rthuds": "RTHuds",
   "rthuds.hud.direction.south": "Νότος",
   "rthuds.hud.direction.southwest": "Νοτιοδυτικά",
   "rthuds.hud.direction.west": "Δύση",
@@ -34,7 +34,7 @@
   "rthuds.settings.decimal_places": "Ακρίβεια συντεταγμένων: ",
   "rthuds.settings.decimal_places.default": "ΠΡΟΕΠΙΛΟΓΗ",
   "rthuds.config.option.background_style.tooltip": "Αλλάζει το φόντο κειμένου: Κανένα, Ανοιχτό ή Πλήρες.",
-  "rthuds.settings.background": "Φόντο: ",
+  "rthuds.settings.background": "Φόντο InfoHUD: ",
   "rthuds.settings.background.none": "ΔΙΑΦΑΝΕΣ",
   "rthuds.settings.background.light": "ΑΝΟΙΧΤΟ",
   "rthuds.settings.background.full": "ΠΛΗΡΕΣ",
@@ -95,5 +95,12 @@
   "rthuds.config.option.layout": "Διάταξη",
   "rthuds.config.option.layout.tooltip": "Ορίζει τη διάταξη με την οποία εμφανίζεται το HUD.",
   "rthuds.config.option.layout.LAYOUT_1": "ΟΡΙΖΟΝΤΙΑ",
-  "rthuds.config.option.layout.LAYOUT_2": "ΚΑΤΑΚΟΡΥΦΑ"
+  "rthuds.config.option.layout.LAYOUT_2": "ΚΑΤΑΚΟΡΥΦΑ",
+  "rthuds.settings.hud_x": "Πληροφορίες HUD X: ",
+  "rthuds.settings.hud_x.tooltip": "Μπορείτε να ρυθμίσετε τη θέση X του HUD πληροφοριών.",
+  "rthuds.settings.hud_y": "Πληροφορίες HUD Y: ",
+  "rthuds.settings.hud_y.tooltip": "Μπορείτε να ρυθμίσετε τη θέση Y του HUD πληροφοριών.",
+  "rthuds.settings.reset.general": "Επαναφορά",
+  "rthuds.settings.armor.background.tooltip": "Αλλάξτε το φόντο του Armor HUD σε Κανένα, Ανοιχτό ή Πλήρες.",
+  "rthuds.settings.armor.background": "Φόντο ArmorHUD: "
 }
