@@ -12,7 +12,7 @@ public class ModConfig {
     public int decimalPlaces = 3;
     public boolean toggleNetherCoordinateConversion = true;
     public enum BackgroundStyle {NONE, LIGHT, FULL}
-    public BackgroundStyle backgroundStyle = BackgroundStyle.NONE;
+    public BackgroundStyle backgroundStyle = BackgroundStyle.LIGHT;
     public enum Layout {LAYOUT_1, LAYOUT_2,}
     public Layout layout = Layout.LAYOUT_1;
     public enum HudColor {
@@ -37,8 +37,6 @@ public class ModConfig {
     public HudColor directionColor = HudColor.WHITE;
     public HudColor fpsColor = HudColor.WHITE;
     public HudColor netherCoordColor = HudColor.WHITE;
-    public enum HUDLocation {LEFTUP, LEFTDOWN, RIGHTUP, RIGHTDOWN, CENTERUP}
-    public HUDLocation ScreenLocation = HUDLocation.LEFTUP;
     public boolean ArmorHUD = true;
     public boolean ArmorDurabilityBar = true;
     public boolean ShowEmpytSlot = true;
@@ -50,4 +48,8 @@ public class ModConfig {
     public HudColor ArmorTextColor = HudColor.WHITE;
     public boolean ArmorTextShadow = true;
     public boolean showHandItems = true;
+    public int hudXPercent = 0;
+    public int hudYPercent = 0;
+    public enum ArmorBackgroundStyle {NONE, LIGHT, FULL}
+    public ArmorBackgroundStyle armorBackgroundStyle = ArmorBackgroundStyle.NONE;
 }

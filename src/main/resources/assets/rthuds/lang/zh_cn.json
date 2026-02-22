@@ -2,7 +2,7 @@
   "key.rthuds.toggle": "切换 HUD",
   "key.rthuds.settignsmenu": "设置",
   "key.rthuds.togglearmor": "切换盔甲HUD",
-  "key.categories.rthuds": "RTHuds",
+  "key.category.minecraft.key.categories.rthuds": "RTHuds",
   "rthuds.hud.direction.south": "南",
   "rthuds.hud.direction.southwest": "西南",
   "rthuds.hud.direction.west": "西",
@@ -34,7 +34,7 @@
   "rthuds.settings.decimal_places": "坐标精度: ",
   "rthuds.settings.decimal_places.default": "默认",
   "rthuds.config.option.background_style.tooltip": "更改文本背景：无、浅色或完整。",
-  "rthuds.settings.background": "背景: ",
+  "rthuds.settings.background": "信息HUD 背景: ",
   "rthuds.settings.background.none": "透明",
   "rthuds.settings.background.light": "浅色",
   "rthuds.settings.background.full": "完整",
@@ -95,5 +95,12 @@
   "rthuds.config.option.layout": "布局",
   "rthuds.config.option.layout.tooltip": "设置 HUD 显示的布局方式。",
   "rthuds.config.option.layout.LAYOUT_1": "水平",
-  "rthuds.config.option.layout.LAYOUT_2": "垂直"
+  "rthuds.config.option.layout.LAYOUT_2": "垂直",
+  "rthuds.settings.hud_x": "信息HUD X: ",
+  "rthuds.settings.hud_x.tooltip": "您可以调整信息HUD的X位置。",
+  "rthuds.settings.hud_y": "信息HUD Y: ",
+  "rthuds.settings.hud_y.tooltip": "您可以调整信息HUD的Y位置。",
+  "rthuds.settings.reset.general": "重置",
+  "rthuds.settings.armor.background.tooltip": "将护甲HUD背景更改为 无、浅色 或 完整。",
+  "rthuds.settings.armor.background": "护甲HUD 背景: "
 }
