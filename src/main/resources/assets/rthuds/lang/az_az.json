@@ -2,7 +2,7 @@
   "key.rthuds.toggle": "HUD-u Aç/Bağla",
   "key.rthuds.settignsmenu": "Tənzimləmələr",
   "key.rthuds.togglearmor": "Zireh HUD-unu Aç/Bağla",
-  "key.categories.rthuds": "RTHuds",
+  "key.category.minecraft.key.categories.rthuds": "RTHuds",
   "rthuds.hud.direction.south": "Cənub",
   "rthuds.hud.direction.southwest": "Cənub-Qərb",
   "rthuds.hud.direction.west": "Qərb",
@@ -34,7 +34,7 @@
   "rthuds.settings.decimal_places": "Koordinat Dəqiqliyi: ",
   "rthuds.settings.decimal_places.default": "VARSAYILAN",
   "rthuds.config.option.background_style.tooltip": "Yazı arxa planını Yoxdur, Yüngül və ya Tam olaraq dəyişdirir.",
-  "rthuds.settings.background": "Arxa Plan: ",
+  "rthuds.settings.background": "MəlumatHUD Arxa Fon: ",
   "rthuds.settings.background.none": "ŞƏFFAF",
   "rthuds.settings.background.light": "YÜNGÜL",
   "rthuds.settings.background.full": "TAM",
@@ -95,5 +95,12 @@
   "rthuds.config.option.layout": "Düzən",
   "rthuds.config.option.layout.tooltip": "HUD-un hansı düzəndə göstəriləcəyini nizamlayır.",
   "rthuds.config.option.layout.LAYOUT_1": "ÜFÜQİ",
-  "rthuds.config.option.layout.LAYOUT_2": "ŞAQULİ"
+  "rthuds.config.option.layout.LAYOUT_2": "ŞAQULİ",
+  "rthuds.settings.hud_x": "Məlumat HUD X: ",
+  "rthuds.settings.hud_x.tooltip": "Məlumat HUD-un X mövqeyini tənzimləyə bilərsiniz.",
+  "rthuds.settings.hud_y": "Məlumat HUD Y: ",
+  "rthuds.settings.hud_y.tooltip": "Məlumat HUD-un Y mövqeyini tənzimləyə bilərsiniz.",
+  "rthuds.settings.reset.general": "Sıfırla",
+  "rthuds.settings.armor.background.tooltip": "Zireh HUD arxa fonunu Heç biri, Açıq və ya Tam olaraq dəyişin.",
+  "rthuds.settings.armor.background": "ZirehHUD Arxa Fon: "
 }

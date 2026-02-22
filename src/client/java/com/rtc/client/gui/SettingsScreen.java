@@ -4,6 +4,7 @@ import static net.minecraft.client.gui.screens.worldselection.CreateWorldScreen.
 
 import java.util.Set;
 
+import com.rtc.client.hud.ModConfig;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.OptionInstance;
 import net.minecraft.client.gui.GuiGraphics;
@@ -22,7 +23,9 @@ import net.minecraft.network.chat.CommonComponents;
 import net.minecraft.network.chat.Component;
 import org.jetbrains.annotations.Nullable;
 
-@SuppressWarnings("unused")
+import static com.rtc.client.gui.SettingsOptions.*;
+
+@SuppressWarnings({"unused", "FieldCanBeLocal"})
 public class SettingsScreen extends Screen {
     private final HeaderAndFooterLayout layout = new HeaderAndFooterLayout(this);
     private final TabManager tabManager = new TabManager(this::addRenderableWidget, this::removeWidget);
@@ -30,6 +33,10 @@ public class SettingsScreen extends Screen {
 
     @Nullable
     private TabNavigationBar tabNavigationBar;
+
+    private Button resetButton;
+
+    private int currentTabIndex = 0;
 
     public SettingsScreen(Screen lastScreen) {
         super(Component.literal("RTHuds"));
@@ -45,14 +52,88 @@ public class SettingsScreen extends Screen {
 
         LinearLayout linearlayout =
                 this.layout.addToFooter(LinearLayout.horizontal().spacing(8));
-        linearlayout.addChild(Button.builder(CommonComponents.GUI_DONE, button -> this.onClose())
-                .build());
+
+        this.resetButton = Button.builder(
+                Component.translatable("rthuds.settings.reset.general"),
+                button -> handleReset()
+        ).build();
+
+        linearlayout.addChild(this.resetButton);
+
+        linearlayout.addChild(
+                Button.builder(CommonComponents.GUI_DONE, button -> this.onClose())
+                        .build()
+        );
+
         this.layout.visitWidgets(widget -> {
             widget.setTabOrderGroup(1);
             this.addRenderableWidget(widget);
         });
-        this.tabNavigationBar.selectTab(0, false);
+
+        this.tabNavigationBar.selectTab(this.currentTabIndex, false);
         this.repositionElements();
+    }
+
+    private void handleReset() {
+        var current = this.tabManager.getCurrentTab();
+
+        if (current instanceof GeneralTab) {
+            resetGeneralSettings();
+            this.currentTabIndex = 0;
+        } else if (current instanceof AppearanceTab) {
+            resetAppearanceSettings();
+            this.currentTabIndex = 1;
+        } else if (current instanceof ColorTab) {
+            resetColorSettings();
+            this.currentTabIndex = 2;
+        } else if (current instanceof ImpressionTab) {
+            resetImpressionSettings();
+            this.currentTabIndex = 3;
+        }
+
+        this.rebuildWidgets();
+    }
+
+    private void resetGeneralSettings() {
+        SHOW_HUD.set(true);
+        SHOW_ARMOR_HUD.set(true);
+        SHOW_DEBUG_SCREEN.set(true);
+        SHOW_HIDE_GUI.set(true);
+    }
+
+    private void resetAppearanceSettings() {
+        INFO_HUD_LAYOUT.set(ModConfig.Layout.LAYOUT_1);
+        ARMORHUD_LOCATION.set(ModConfig.ArmorHUDLocation.LEFTCENTER);
+        INFOHUD_TEXT_SHADOW.set(true);
+        ARMORHUD_TEXT_SHADOW.set(true);
+        ARMORHUD_HEALTHTEXT.set(ModConfig.ArmorDurabilityEnum.REMAINING);
+        SHOW_DURABILITYBAR.set(true);
+        SHOW_EMPTYSLOTS.set(true);
+        SHOW_HANDITEMS.set(true);
+        DECIMAL_PLACES.set(6);
+        ARMOR_SCALE.set(0.50);
+        ARMOR_BACKGROUND_STYLE.set(1);
+        INFO_BACKGROUND_STYLE.set(1);
+        INFO_HUD_X.set(0);
+        INFO_HUD_Y.set(0);
+    }
+
+    private void resetColorSettings() {
+        COORDINATES_COLOR.set(ModConfig.HudColor.WHITE);
+        YAW_COLOR.set(ModConfig.HudColor.WHITE);
+        PITCH_COLOR.set(ModConfig.HudColor.WHITE);
+        DIRECTION_COLOR.set(ModConfig.HudColor.WHITE);
+        FPS_COLOR.set(ModConfig.HudColor.WHITE);
+        NETHERCOORDS_COLOR.set(ModConfig.HudColor.WHITE);
+        ARMOR_HEALTH_COLOR.set(ModConfig.HudColor.WHITE);
+    }
+
+    private void resetImpressionSettings() {
+        SHOW_COORDINATES.set(true);
+        SHOW_YAWPITCH.set(true);
+        SHOW_DIRECTION.set(true);
+        SHOW_FPS.set(true);
+        SHOW_NETHER_COORDINATES.set(true);
     }
 
     @Override
@@ -81,37 +162,39 @@ public class SettingsScreen extends Screen {
     }
 
     public void addToAppearanceTab(GridLayout.RowHelper rowHelper) {
-        rowHelper.addChild(createWidget(SettingsOptions.INFOHUD_LOCATION));
-        rowHelper.addChild(createWidget(SettingsOptions.ARMORHUD_LOCATION));
-        rowHelper.addChild(createWidget(SettingsOptions.INFOHUD_TEXT_SHADOW));
-        rowHelper.addChild(createWidget(SettingsOptions.ARMORHUD_TEXT_SHADOW));
-        rowHelper.addChild(createWidget(SettingsOptions.BACKGROUND_STYLE));
-        rowHelper.addChild(createWidget(SettingsOptions.DECIMAL_PLACES));
-        rowHelper.addChild(createWidget(SettingsOptions.SHOW_DURABILITYBAR));
-        rowHelper.addChild(createWidget(SettingsOptions.SHOW_EMPTYSLOTS));
-        rowHelper.addChild(createWidget(SettingsOptions.SHOW_HANDITEMS));
-        rowHelper.addChild(createWidget(SettingsOptions.ARMOR_SCALE));
-        rowHelper.addChild(createWidget(SettingsOptions.ARMORHUD_HEALTHTEXT));
-        rowHelper.addChild(createWidget(SettingsOptions.INFO_HUD_LAYOUT));
+        rowHelper.addChild(createWidget(INFO_HUD_LAYOUT));
+        rowHelper.addChild(createWidget(ARMORHUD_LOCATION));
+        rowHelper.addChild(createWidget(INFOHUD_TEXT_SHADOW));
+        rowHelper.addChild(createWidget(ARMORHUD_TEXT_SHADOW));
+        rowHelper.addChild(createWidget(ARMORHUD_HEALTHTEXT));
+        rowHelper.addChild(createWidget(SHOW_DURABILITYBAR));
+        rowHelper.addChild(createWidget(SHOW_EMPTYSLOTS));
+        rowHelper.addChild(createWidget(SHOW_HANDITEMS));
+        rowHelper.addChild(createWidget(DECIMAL_PLACES));
+        rowHelper.addChild(createWidget(ARMOR_SCALE));
+        rowHelper.addChild(createWidget(ARMOR_BACKGROUND_STYLE));
+        rowHelper.addChild(createWidget(INFO_BACKGROUND_STYLE));
+        rowHelper.addChild(createWidget(INFO_HUD_X));
+        rowHelper.addChild(createWidget(INFO_HUD_Y));
 
     }
 
     public void addToColorTab(GridLayout.RowHelper rowHelper) {
-        rowHelper.addChild(createWidget(SettingsOptions.COORDINATES_COLOR));
-        rowHelper.addChild(createWidget(SettingsOptions.YAW_COLOR));
-        rowHelper.addChild(createWidget(SettingsOptions.PITCH_COLOR));
-        rowHelper.addChild(createWidget(SettingsOptions.DIRECTION_COLOR));
-        rowHelper.addChild(createWidget(SettingsOptions.FPS_COLOR));
-        rowHelper.addChild(createWidget(SettingsOptions.NETHERCOORDS_COLOR));
-        rowHelper.addChild(createWidget(SettingsOptions.ARMOR_HEALTH_COLOR));
+        rowHelper.addChild(createWidget(COORDINATES_COLOR));
+        rowHelper.addChild(createWidget(YAW_COLOR));
+        rowHelper.addChild(createWidget(PITCH_COLOR));
+        rowHelper.addChild(createWidget(DIRECTION_COLOR));
+        rowHelper.addChild(createWidget(FPS_COLOR));
+        rowHelper.addChild(createWidget(NETHERCOORDS_COLOR));
+        rowHelper.addChild(createWidget(ARMOR_HEALTH_COLOR));
     }
 
     public void addToImpressionTab(GridLayout.RowHelper rowHelper) {
-        rowHelper.addChild(createWidget(SettingsOptions.SHOW_COORDINATES));
-        rowHelper.addChild(createWidget(SettingsOptions.SHOW_YAWPITCH));
-        rowHelper.addChild(createWidget(SettingsOptions.SHOW_DIRECTION));
-        rowHelper.addChild(createWidget(SettingsOptions.SHOW_FPS));
-        rowHelper.addChild(createWidget(SettingsOptions.SHOW_NETHER_COORDINATES));
+        rowHelper.addChild(createWidget(SHOW_COORDINATES));
+        rowHelper.addChild(createWidget(SHOW_YAWPITCH));
+        rowHelper.addChild(createWidget(SHOW_DIRECTION));
+        rowHelper.addChild(createWidget(SHOW_FPS));
+        rowHelper.addChild(createWidget(SHOW_NETHER_COORDINATES));
     }
 
     public static AbstractWidget createWidget(OptionInstance<?> option) {
@@ -138,10 +221,10 @@ public class SettingsScreen extends Screen {
         GeneralTab() {
             super(Component.translatable("rthuds.settings.generaltitle"));
             var rowHelper = this.layout.columnSpacing(3).rowSpacing(3).createRowHelper(2);
-            rowHelper.addChild(createWidget(SettingsOptions.SHOW_DEBUG_SCREEN));
-            rowHelper.addChild(createWidget(SettingsOptions.SHOW_HIDE_GUI));
-            rowHelper.addChild(createWidget(SettingsOptions.SHOW_HUD));
-            rowHelper.addChild(createWidget(SettingsOptions.SHOW_ARMOR_HUD));
+            rowHelper.addChild(createWidget(SHOW_HUD));
+            rowHelper.addChild(createWidget(SHOW_ARMOR_HUD));
+            rowHelper.addChild(createWidget(SHOW_DEBUG_SCREEN));
+            rowHelper.addChild(createWidget(SHOW_HIDE_GUI));
         }
     }
 

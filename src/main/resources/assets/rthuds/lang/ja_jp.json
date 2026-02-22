@@ -2,7 +2,7 @@
   "key.rthuds.toggle": "HUD 切り替え",
   "key.rthuds.settignsmenu": "設定",
   "key.rthuds.togglearmor": "アーマーHUDの切り替え",
-  "key.categories.rthuds": "RTHuds",
+  "key.category.minecraft.key.categories.rthuds": "RTHuds",
   "rthuds.hud.direction.south": "南",
   "rthuds.hud.direction.southwest": "南西",
   "rthuds.hud.direction.west": "西",
@@ -34,7 +34,7 @@
   "rthuds.settings.decimal_places": "座標精度: ",
   "rthuds.settings.decimal_places.default": "デフォルト",
   "rthuds.config.option.background_style.tooltip": "テキスト背景をなし・薄い・完全に変更できます。",
-  "rthuds.settings.background": "背景: ",
+  "rthuds.settings.background": "情報HUD 背景: ",
   "rthuds.settings.background.none": "透明",
   "rthuds.settings.background.light": "薄い",
   "rthuds.settings.background.full": "完全",
@@ -95,5 +95,12 @@
   "rthuds.config.option.layout": "レイアウト",
   "rthuds.config.option.layout.tooltip": "HUD の表示レイアウトを設定します。",
   "rthuds.config.option.layout.LAYOUT_1": "水平",
-  "rthuds.config.option.layout.LAYOUT_2": "垂直"
+  "rthuds.config.option.layout.LAYOUT_2": "垂直",
+  "rthuds.settings.hud_x": "情報HUD X: ",
+  "rthuds.settings.hud_x.tooltip": "情報HUDのX位置を調整できます。",
+  "rthuds.settings.hud_y": "情報HUD Y: ",
+  "rthuds.settings.hud_y.tooltip": "情報HUDのY位置を調整できます。",
+  "rthuds.settings.reset.general": "リセット",
+  "rthuds.settings.armor.background.tooltip": "アーマーHUDの背景を「なし」「ライト」「フル」に変更します。",
+  "rthuds.settings.armor.background": "アーマーHUD 背景: "
 }
