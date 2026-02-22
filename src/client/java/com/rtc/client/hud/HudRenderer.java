@@ -5,23 +5,36 @@ import net.fabricmc.fabric.api.client.rendering.v1.HudRenderCallback;
 import net.minecraft.client.DeltaTracker;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.Minecraft;
+import net.minecraft.network.chat.Style;
+import net.minecraft.util.Mth;
+import net.minecraft.world.level.Level;
+import com.rtc.client.hud.ModConfig.HudColor;
 
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
-
-import com.rtc.client.hud.ModConfig.HudColor;
-import net.minecraft.network.chat.Style;
-import net.minecraft.util.Mth;
-import net.minecraft.world.level.Level;
+import java.util.Locale;
 
 @SuppressWarnings("ALL")
 public class HudRenderer {
 
+    private static DecimalFormat dfX, dfY, dfZ;
+    private static int lastDecimalPlaces = -1;
+
     public static void register() {
         HudRenderCallback.EVENT.register(HudRenderer::onRender);
+    }
+
+    private static void updateFormatters(int decimalPlaces) {
+        if (decimalPlaces == lastDecimalPlaces && dfX != null) return;
+
+        dfX = createFormat(decimalPlaces, Axis.X);
+        dfY = createFormat(decimalPlaces, Axis.Y);
+        dfZ = createFormat(decimalPlaces, Axis.Z);
+        lastDecimalPlaces = decimalPlaces;
     }
 
     private static DecimalFormat createFormat(int decimalPlaces, Axis axis) {
@@ -43,16 +56,17 @@ public class HudRenderer {
     }
 
     private static void onRender(GuiGraphics guiGraphics, DeltaTracker deltaTracker) {
-        if (!HudConfig.configManager.getConfig().showHud) return;
+        var config = HudConfig.configManager.getConfig();
+        if (!config.showHud) return;
 
         Minecraft mc = Minecraft.getInstance();
-
-        if (HudConfig.configManager.getConfig().showF1 && mc.options.hideGui) return;
-        if (HudConfig.configManager.getConfig().showDebug && mc.getDebugOverlay().showDebugScreen()) return;
+        if (config.showF1 && mc.options.hideGui) return;
+        if (config.showDebug && mc.getDebugOverlay().showDebugScreen()) return;
 
         LocalPlayer player = mc.player;
-
         if (player == null) return;
+
+        updateFormatters(config.decimalPlaces);
 
         var camera = mc.gameRenderer.getMainCamera();
         float yaw = Mth.wrapDegrees(camera.getYRot());
@@ -61,81 +75,70 @@ public class HudRenderer {
         List<Component> lines = new ArrayList<>();
         int valueColor = HudColor.WHITE.color;
 
-        int decimalPlaces = HudConfig.configManager.getConfig().decimalPlaces;
-
-        DecimalFormat dfX = createFormat(decimalPlaces, Axis.X);
-        DecimalFormat dfY = createFormat(decimalPlaces, Axis.Y);
-        DecimalFormat dfZ = createFormat(decimalPlaces, Axis.Z);
-
         String xText = dfX.format(player.getX());
         String yText = dfY.format(player.getY());
         String zText = dfZ.format(player.getZ());
 
-        switch (HudConfig.configManager.getConfig().layout) {
+        switch (config.layout) {
             case LAYOUT_1:
-                var line = Component.literal("");
+                MutableComponent line = Component.empty();
                 boolean needsSeparator = false;
 
-                if (HudConfig.configManager.getConfig().showCoords) {
-                    line.append(Component.literal("XYZ: ")
-                                    .withColor(HudConfig.configManager.getConfig().xyzColor.color)
-                                    .append(Component.literal(String.format("%s ", xText)).withColor(valueColor))
-                                    .append(Component.literal("/").withColor(HudConfig.configManager.getConfig().xyzColor.color))
-                                    .append(Component.literal(String.format(" %s ", yText)).withColor(valueColor))
-                                    .append(Component.literal("/").withColor(HudConfig.configManager.getConfig().xyzColor.color)))
-                            .append(Component.literal(String.format(" %s", zText)).withColor(valueColor));
+                if (config.showCoords) {
+                    line.append(Component.literal("XYZ: ").withColor(config.xyzColor.color))
+                            .append(Component.literal(xText).withColor(valueColor))
+                            .append(Component.literal(" / ").withColor(config.xyzColor.color))
+                            .append(Component.literal(yText).withColor(valueColor))
+                            .append(Component.literal(" / ").withColor(config.xyzColor.color))
+                            .append(Component.literal(zText).withColor(valueColor));
                     needsSeparator = true;
                 }
 
-                if (HudConfig.configManager.getConfig().showYawPitch) {
+                if (config.showYawPitch) {
                     if (needsSeparator) line.append(Component.literal(" | ").withColor(valueColor));
-                    line.append(Component.literal("Yaw: ").withColor(HudConfig.configManager.getConfig().yawColor.color))
-                            .append(Component.literal(String.format("%.1f", yaw)).withColor(valueColor))
-                            .append(Component.literal(" Pitch: ").withColor(HudConfig.configManager.getConfig().pitchColor.color))
-                            .append(Component.literal(String.format("%.1f", pitch)).withColor(valueColor));
+                    line.append(Component.literal("Yaw: ").withColor(config.yawColor.color))
+                            .append(Component.literal(String.format(Locale.US, "%.1f", yaw)).withColor(valueColor))
+                            .append(Component.literal(" Pitch: ").withColor(config.pitchColor.color))
+                            .append(Component.literal(String.format(Locale.US, "%.1f", pitch)).withColor(valueColor));
                     needsSeparator = true;
                 }
 
-                if (HudConfig.configManager.getConfig().showDirection) {
+                if (config.showDirection) {
                     if (needsSeparator) line.append(Component.literal(" | ").withColor(valueColor));
-                    line.append(Component.translatable("rthuds.hud.direction").withColor(HudConfig.configManager.getConfig().directionColor.color))
-                            .append(getDirection(player).copy().setStyle((Style.EMPTY.withColor(valueColor))));
+                    line.append(Component.translatable("rthuds.hud.direction").withColor(config.directionColor.color))
+                            .append(getDirection(player).copy().setStyle(Style.EMPTY.withColor(valueColor)));
                     needsSeparator = true;
                 }
 
-                if (HudConfig.configManager.getConfig().showFPS) {
+                if (config.showFPS) {
                     if (needsSeparator) line.append(Component.literal(" | ").withColor(valueColor));
-                    line.append(Component.literal("FPS: ").withColor(HudConfig.configManager.getConfig().fpsColor.color))
+                    line.append(Component.literal("FPS: ").withColor(config.fpsColor.color))
                             .append(Component.literal(String.valueOf(mc.getFps())).withColor(valueColor));
-                    needsSeparator = true;
                 }
 
-                if (needsSeparator) lines.add(line);
-
-                addNetherCoords(lines, player, valueColor);
+                if (!line.getString().isEmpty()) lines.add(line);
+                addNetherCoords(lines, player, config, valueColor);
                 break;
 
             case LAYOUT_2:
-                if (HudConfig.configManager.getConfig().showCoords) {
-                    lines.add(Component.literal("X: ").withColor(HudConfig.configManager.getConfig().xyzColor.color).append(Component.literal(xText).withColor(valueColor)));
-                    lines.add(Component.literal("Y: ").withColor(HudConfig.configManager.getConfig().xyzColor.color).append(Component.literal(yText).withColor(valueColor)));
-                    lines.add(Component.literal("Z: ").withColor(HudConfig.configManager.getConfig().xyzColor.color).append(Component.literal(zText).withColor(valueColor)));
+                if (config.showCoords) {
+                    lines.add(Component.literal("X: ").withColor(config.xyzColor.color).append(Component.literal(xText).withColor(valueColor)));
+                    lines.add(Component.literal("Y: ").withColor(config.xyzColor.color).append(Component.literal(yText).withColor(valueColor)));
+                    lines.add(Component.literal("Z: ").withColor(config.xyzColor.color).append(Component.literal(zText).withColor(valueColor)));
                 }
-                if (HudConfig.configManager.getConfig().showYawPitch) {
-                    lines.add(Component.literal("Yaw: ").withColor(HudConfig.configManager.getConfig().yawColor.color).append(Component.literal(String.valueOf(yaw)).withColor(valueColor)));
-                    lines.add(Component.literal("Pitch: ").withColor(HudConfig.configManager.getConfig().pitchColor.color).append(Component.literal(String.valueOf(pitch)).withColor(valueColor)));
+                if (config.showYawPitch) {
+                    lines.add(Component.literal("Yaw: ").withColor(config.yawColor.color).append(Component.literal(String.format(Locale.US, "%.1f", yaw)).withColor(valueColor)));
+                    lines.add(Component.literal("Pitch: ").withColor(config.pitchColor.color).append(Component.literal(String.format(Locale.US, "%.1f", pitch)).withColor(valueColor)));
                 }
-                if (HudConfig.configManager.getConfig().showDirection) {
-                    lines.add(Component.translatable("rthuds.hud.direction").withColor(HudConfig.configManager.getConfig().directionColor.color)
+                if (config.showDirection) {
+                    lines.add(Component.translatable("rthuds.hud.direction").withColor(config.directionColor.color)
+                            .append(Component.literal(" "))
                             .append(getDirection(player).copy().setStyle(Style.EMPTY.withColor(valueColor))));
                 }
-                if (HudConfig.configManager.getConfig().showFPS) {
-                    lines.add(Component.literal("FPS: ").withColor(HudConfig.configManager.getConfig().fpsColor.color).append(Component.literal(String.valueOf(mc.getFps())).withColor(valueColor)));
+                if (config.showFPS) {
+                    lines.add(Component.literal("FPS: ").withColor(config.fpsColor.color).append(Component.literal(String.valueOf(mc.getFps())).withColor(valueColor)));
                 }
-                addNetherCoords(lines, player, valueColor);
-                break;
-
-            default:
+                addNetherCoords(lines, player, config, valueColor);
                 break;
         }
 
@@ -143,150 +146,87 @@ public class HudRenderer {
 
         int textHeight = mc.font.lineHeight;
         int lineSpacing = 2;
-        int screenPadding = 2;
         int bgPadding = 2;
 
-        int maxWidth = 0;
-        for (Component line : lines) {
-            int currentWidth = mc.font.width(line);
-            if (currentWidth > maxWidth) {
-                maxWidth = currentWidth;
-            }
-        }
-
+        int maxWidth = lines.stream().mapToInt(mc.font::width).max().orElse(0);
         int totalHeight = (lines.size() * textHeight) + ((lines.size() - 1) * lineSpacing);
-        if (totalHeight < textHeight) totalHeight = textHeight;
 
-        int startX = screenPadding;
-        int startY = screenPadding;
         int screenWidth = mc.getWindow().getGuiScaledWidth();
         int screenHeight = mc.getWindow().getGuiScaledHeight();
 
-        switch (HudConfig.configManager.getConfig().ScreenLocation) {
-            case LEFTUP:
-                startX = screenPadding;
-                startY = screenPadding;
-                break;
-            case LEFTDOWN:
-                startX = screenPadding;
-                startY = screenHeight - totalHeight - screenPadding;
-                break;
-            case RIGHTUP:
-                startX = screenWidth - maxWidth - screenPadding;
-                startY = screenPadding;
-                break;
-            case RIGHTDOWN:
-                startX = screenWidth - maxWidth - screenPadding;
-                startY = screenHeight - totalHeight - screenPadding;
-                break;
-            case CENTERUP:
-                startX = (screenWidth / 2) - (maxWidth / 2);
-                startY = screenPadding;
-                break;
-        }
+        double xPercent = Mth.clamp(config.hudXPercent, 0, 100);
+        double yPercent = Mth.clamp(config.hudYPercent, 0, 100);
 
-        int backgroundColor = 0;
-        switch (HudConfig.configManager.getConfig().backgroundStyle) {
-            case LIGHT:
-                backgroundColor = 0x80000000;
-                break;
-            case FULL:
-                backgroundColor = 0xFF000000;
-                break;
-            case NONE:
-            default:
-                break;
-        }
+        int startX = (int) ((screenWidth - maxWidth) * (xPercent / 100.0));
+        int startY = (int) ((screenHeight - totalHeight) * (yPercent / 100.0));
+
+        int backgroundColor = switch (config.backgroundStyle) {
+            case LIGHT -> 0x80000000;
+            case FULL -> 0xFF000000;
+            default -> 0;
+        };
 
         if (backgroundColor != 0) {
             guiGraphics.fill(startX - bgPadding, startY - bgPadding, startX + maxWidth + bgPadding, startY + totalHeight + bgPadding, backgroundColor);
         }
 
         for (int i = 0; i < lines.size(); i++) {
-            Component line = lines.get(i);
-            int lineWidth = mc.font.width(line);
-
+            Component lineItem = lines.get(i);
+            int lineWidth = mc.font.width(lineItem);
             int lineY = startY + (i * (textHeight + lineSpacing));
-            int lineX = startX;
+            int lineX;
 
-            if (HudConfig.configManager.getConfig().ScreenLocation == ModConfig.HUDLocation.RIGHTUP ||
-                    HudConfig.configManager.getConfig().ScreenLocation == ModConfig.HUDLocation.RIGHTDOWN) {
+            if (xPercent >= 60) {
                 lineX = startX + (maxWidth - lineWidth);
-            } else if (HudConfig.configManager.getConfig().ScreenLocation == ModConfig.HUDLocation.CENTERUP) {
+            } else if (xPercent >= 40) {
                 lineX = startX + (maxWidth - lineWidth) / 2;
+            } else {
+                lineX = startX;
             }
 
-            guiGraphics.drawString(mc.font, line, lineX, lineY, 0xFFFFFFFF, HudConfig.configManager.getConfig().textShadow);
+            guiGraphics.drawString(mc.font, lineItem, lineX, lineY, 0xFFFFFFFF, config.textShadow);
         }
     }
 
-    // Kod tekrarını önlemek için Nether koordinat eklemeyi metoda çevirdim
-    private static void addNetherCoords(List<Component> lines, LocalPlayer player, int valueColor) {
+    private static void addNetherCoords(List<Component> lines, LocalPlayer player, ModConfig config, int valueColor) {
+        if (!config.toggleNetherCoordinateConversion || player.level() == null) return;
 
-        int decimalPlaces = HudConfig.configManager.getConfig().decimalPlaces;
-        Minecraft mc = Minecraft.getInstance();
-        // LocalPlayer player = mc.player;
+        boolean isOverworld = player.level().dimension() == Level.OVERWORLD;
+        boolean isNether = player.level().dimension() == Level.NETHER;
 
-        DecimalFormat dfX = createFormat(decimalPlaces, Axis.X);
-        DecimalFormat dfY = createFormat(decimalPlaces, Axis.Y);
-        DecimalFormat dfZ = createFormat(decimalPlaces, Axis.Z);
+        if (!isOverworld && !isNether) return;
 
-        String xText = dfX.format(player.getX());
-        String yText = dfY.format(player.getY());
-        String zText = dfZ.format(player.getZ());
+        double factor = isOverworld ? 1.0 / 8.0 : 8.0;
+        String prefixKey = isOverworld ? "rthuds.text.nether" : "rthuds.text.overworld";
 
-        if (HudConfig.configManager.getConfig().toggleNetherCoordinateConversion) {
-            if (player != null && player.level() != null) {
-                if (player.level().dimension() == Level.OVERWORLD) {
-                    double xNether = player.getX() / 8;
-                    double yNether = player.getY();
-                    double zNether = player.getZ() / 8;
-                    lines.add(Component.translatable("rthuds.text.nether").withColor(HudConfig.configManager.getConfig().netherCoordColor.color)
-                            .append(Component.literal(dfX.format(xNether)).withColor(valueColor))
-                            .append(Component.literal(" / ").withColor(HudConfig.configManager.getConfig().netherCoordColor.color))
-                            .append(Component.literal(dfY.format(yNether)).withColor(valueColor))
-                            .append(Component.literal(" / ").withColor(HudConfig.configManager.getConfig().netherCoordColor.color))
-                            .append(Component.literal(dfZ.format(zNether)).withColor(valueColor)));
-                } else if (player.level().dimension() == Level.NETHER) {
-                    double xOver = player.getX() * 8;
-                    double yOver = player.getY();
-                    double zOver = player.getZ() * 8;
-                    lines.add(Component.translatable("rthuds.text.overworld").withColor(HudConfig.configManager.getConfig().netherCoordColor.color)
-                            .append(Component.literal(dfX.format(xOver)).withColor(valueColor))
-                            .append(Component.literal(" / ").withColor(HudConfig.configManager.getConfig().netherCoordColor.color))
-                            .append(Component.literal(dfY.format(yOver)).withColor(valueColor))
-                            .append(Component.literal(" / ").withColor(HudConfig.configManager.getConfig().netherCoordColor.color))
-                            .append(Component.literal(dfZ.format(zOver)).withColor(valueColor)));
-                }
-            }
-        }
+        String xConv = dfX.format(player.getX() * factor);
+        String yConv = dfY.format(player.getY());
+        String zConv = dfZ.format(player.getZ() * factor);
+
+        lines.add(Component.translatable(prefixKey).withColor(config.netherCoordColor.color)
+                .append(Component.literal(" "))
+                .append(Component.literal(xConv).withColor(valueColor))
+                .append(Component.literal(" / ").withColor(config.netherCoordColor.color))
+                .append(Component.literal(yConv).withColor(valueColor))
+                .append(Component.literal(" / ").withColor(config.netherCoordColor.color))
+                .append(Component.literal(zConv).withColor(valueColor)));
     }
 
     private static Component getDirection(LocalPlayer player) {
-        float yaw = player.getYRot() % 360;
-        if (yaw < 0) yaw += 360;
+        float yaw = Mth.positiveModulo(player.getYRot(), 360.0F);
 
-        if (yaw >= 337.5 || yaw < 22.5) {
-            return Component.translatable("rthuds.hud.direction.south");
-        } else if (yaw >= 22.5 && yaw < 67.5) {
-            return Component.translatable("rthuds.hud.direction.southwest");
-        } else if (yaw >= 67.5 && yaw < 112.5) {
-            return Component.translatable("rthuds.hud.direction.west");
-        } else if (yaw >= 112.5 && yaw < 157.5) {
-            return Component.translatable("rthuds.hud.direction.northwest");
-        } else if (yaw >= 157.5 && yaw < 202.5) {
-            return Component.translatable("rthuds.hud.direction.north");
-        } else if (yaw >= 202.5 && yaw < 247.5) {
-            return Component.translatable("rthuds.hud.direction.northeast");
-        } else if (yaw >= 247.5 && yaw < 292.5) {
-            return Component.translatable("rthuds.hud.direction.east");
-        } else {
-            return Component.translatable("rthuds.hud.direction.southeast");
-        }
+        if (yaw >= 337.5 || yaw < 22.5) return Component.translatable("rthuds.hud.direction.south");
+        if (yaw < 67.5) return Component.translatable("rthuds.hud.direction.southwest");
+        if (yaw < 112.5) return Component.translatable("rthuds.hud.direction.west");
+        if (yaw < 157.5) return Component.translatable("rthuds.hud.direction.northwest");
+        if (yaw < 202.5) return Component.translatable("rthuds.hud.direction.north");
+        if (yaw < 247.5) return Component.translatable("rthuds.hud.direction.northeast");
+        if (yaw < 292.5) return Component.translatable("rthuds.hud.direction.east");
+
+        return Component.translatable("rthuds.hud.direction.southeast");
     }
 
     public enum Axis {
         X, Y, Z
     }
-
 }

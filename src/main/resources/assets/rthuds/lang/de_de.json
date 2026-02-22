@@ -2,7 +2,7 @@
   "key.rthuds.toggle": "HUD umschalten",
   "key.rthuds.settignsmenu": "Einstellungen",
   "key.rthuds.togglearmor": "Rüstungs-HUD ein-/ausblenden",
-  "key.categories.rthuds": "RTHuds",
+  "key.category.minecraft.key.categories.rthuds": "RTHuds",
   "rthuds.hud.direction.south": "Süden",
   "rthuds.hud.direction.southwest": "Südwesten",
   "rthuds.hud.direction.west": "Westen",
@@ -34,7 +34,7 @@
   "rthuds.settings.decimal_places": "Koordinatenpräzision: ",
   "rthuds.settings.decimal_places.default": "STANDARD",
   "rthuds.config.option.background_style.tooltip": "Ändert den Texthintergrund von Keine zu Hell oder Voll.",
-  "rthuds.settings.background": "Hintergrund: ",
+  "rthuds.settings.background": "Info-HUD Hintergrund: ",
   "rthuds.settings.background.none": "TRANSPARENT",
   "rthuds.settings.background.light": "HELL",
   "rthuds.settings.background.full": "VOLL",
@@ -95,5 +95,12 @@
   "rthuds.config.option.layout": "Layout",
   "rthuds.config.option.layout.tooltip": "Legt das Layout fest, in dem das HUD angezeigt wird.",
   "rthuds.config.option.layout.LAYOUT_1": "HORIZONTAL",
-  "rthuds.config.option.layout.LAYOUT_2": "VERTIKAL"
+  "rthuds.config.option.layout.LAYOUT_2": "VERTIKAL",
+  "rthuds.settings.hud_x": "Info-HUD X: ",
+  "rthuds.settings.hud_x.tooltip": "Du kannst die X-Position des Info-HUD anpassen.",
+  "rthuds.settings.hud_y": "Info-HUD Y: ",
+  "rthuds.settings.hud_y.tooltip": "Du kannst die Y-Position des Info-HUD anpassen.",
+  "rthuds.settings.reset.general": "Zurücksetzen",
+  "rthuds.settings.armor.background.tooltip": "Ändere den Rüstungs-HUD-Hintergrund zu Kein, Hell oder Voll.",
+  "rthuds.settings.armor.background": "Rüstungs-HUD Hintergrund: "
 }

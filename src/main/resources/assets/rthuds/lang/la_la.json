@@ -2,7 +2,7 @@
   "key.rthuds.toggle": "HUD Mutare",
   "key.rthuds.settignsmenu": "Optiones",
   "key.rthuds.togglearmor": "Armatura HUD Mutare",
-  "key.categories.rthuds": "RTHuds",
+  "key.category.minecraft.key.categories.rthuds": "RTHuds",
   "rthuds.hud.direction.south": "Meridies",
   "rthuds.hud.direction.southwest": "Africus",
   "rthuds.hud.direction.west": "Occidens",
@@ -34,7 +34,7 @@
   "rthuds.settings.decimal_places": "Exactio Coordinatarum: ",
   "rthuds.settings.decimal_places.default": "DEFALTA",
   "rthuds.config.option.background_style.tooltip": "Textus fundamentum mutare potes.",
-  "rthuds.settings.background": "Fundamentum: ",
+  "rthuds.settings.background": "InfoHUD Fundus: ",
   "rthuds.settings.background.none": "PERLUCIDUM",
   "rthuds.settings.background.light": "LEVE",
   "rthuds.settings.background.full": "PLENUM",
@@ -95,5 +95,12 @@
   "rthuds.config.option.layout": "Dispositio",
   "rthuds.config.option.layout.tooltip": "Modum disponendi HUD definit.",
   "rthuds.config.option.layout.LAYOUT_1": "HORIZONTALIS",
-  "rthuds.config.option.layout.LAYOUT_2": "VERTICALIS"
+  "rthuds.config.option.layout.LAYOUT_2": "VERTICALIS",
+  "rthuds.settings.hud_x": "Info HUD X: ",
+  "rthuds.settings.hud_x.tooltip": "Positionem X Info HUD mutare potes.",
+  "rthuds.settings.hud_y": "Info HUD Y: ",
+  "rthuds.settings.hud_y.tooltip": "Positionem Y Info HUD mutare potes.",
+  "rthuds.settings.reset.general": "Reponere",
+  "rthuds.settings.armor.background.tooltip": "Mutare fundum Armor HUD ad Nullum, Leve, aut Plenum.",
+  "rthuds.settings.armor.background": "ArmorHUD Fundus: "
 }
