@@ -34,7 +34,7 @@
   "rthuds.settings.decimal_places": "Точность координат: ",
   "rthuds.settings.decimal_places.default": "ПО УМОЛЧАНИЮ",
   "rthuds.config.option.background_style.tooltip": "Изменяет фон текста: Нет, Светлый или Полный.",
-  "rthuds.settings.background": "Фон: ",
+  "rthuds.settings.background": "Фон InfoHUD: ",
   "rthuds.settings.background.none": "ПРОЗРАЧНЫЙ",
   "rthuds.settings.background.light": "СВЕТЛЫЙ",
   "rthuds.settings.background.full": "ПОЛНЫЙ",
@@ -95,5 +95,12 @@
   "rthuds.config.option.layout": "Макет",
   "rthuds.config.option.layout.tooltip": "Устанавливает макет отображения HUD.",
   "rthuds.config.option.layout.LAYOUT_1": "ГОРИЗОНТАЛЬНЫЙ",
-  "rthuds.config.option.layout.LAYOUT_2": "ВЕРТИКАЛЬНЫЙ"
+  "rthuds.config.option.layout.LAYOUT_2": "ВЕРТИКАЛЬНЫЙ",
+  "rthuds.settings.hud_x": "Инфо HUD X: ",
+  "rthuds.settings.hud_x.tooltip": "Вы можете настроить позицию X информационного HUD.",
+  "rthuds.settings.hud_y": "Инфо HUD Y: ",
+  "rthuds.settings.hud_y.tooltip": "Вы можете настроить позицию Y информационного HUD.",
+  "rthuds.settings.reset.general": "Сброс",
+  "rthuds.settings.armor.background.tooltip": "Изменить фон Armor HUD на Нет, Светлый или Полный.",
+  "rthuds.settings.armor.background": "Фон ArmorHUD: "
 }

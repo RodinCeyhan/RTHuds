@@ -34,7 +34,7 @@
   "rthuds.settings.decimal_places": "Koordinat Hassasiyeti: ",
   "rthuds.settings.decimal_places.default": "VARSAYILAN",
   "rthuds.config.option.background_style.tooltip": "Yazı arka planını Yok, Hafif veya Tam olarak değiştirir.",
-  "rthuds.settings.background": "Arka Plan: ",
+  "rthuds.settings.background": "Bilgi HUD Arka Plan: ",
   "rthuds.settings.background.none": "ŞEFFAF",
   "rthuds.settings.background.light": "HAFİF",
   "rthuds.settings.background.full": "TAM",
@@ -95,5 +95,12 @@
   "rthuds.config.option.layout": "Düzen",
   "rthuds.config.option.layout.tooltip": "HUD'un hangi düzende görüntüleneceğini ayarlar.",
   "rthuds.config.option.layout.LAYOUT_1": "YATAY",
-  "rthuds.config.option.layout.LAYOUT_2": "DİKEY"
+  "rthuds.config.option.layout.LAYOUT_2": "DİKEY",
+  "rthuds.settings.hud_x": "Bilgi HUD X: ",
+  "rthuds.settings.hud_x.tooltip": "Bilgi HUD'un X konumunu ayarlayabilirsiniz.",
+  "rthuds.settings.hud_y": "Bilgi HUD Y: ",
+  "rthuds.settings.hud_y.tooltip": "Bilgi HUD'un Y konumunu ayarlayabilirsiniz.",
+  "rthuds.settings.reset.general": "Sıfırla",
+  "rthuds.settings.armor.background.tooltip": "Zırh HUD arka planını Yok, Açık veya Tam olarak değiştirin.",
+  "rthuds.settings.armor.background": "Zırh HUD Arka Plan: "
 }
