@@ -9,7 +9,7 @@ public class ModConfig {
     public boolean showDirection = true;
     public boolean showFPS = true;
     public boolean showHud = true;
-    public int decimalPlaces = 3;
+    public int decimalPlaces = 6;
     public boolean toggleNetherCoordinateConversion = true;
     public enum BackgroundStyle {NONE, LIGHT, FULL}
     public BackgroundStyle backgroundStyle = BackgroundStyle.LIGHT;
@@ -31,12 +31,6 @@ public class ModConfig {
             this.color = color;
         }
     }
-    public HudColor xyzColor = HudColor.WHITE;
-    public HudColor yawColor = HudColor.WHITE;
-    public HudColor pitchColor = HudColor.WHITE;
-    public HudColor directionColor = HudColor.WHITE;
-    public HudColor fpsColor = HudColor.WHITE;
-    public HudColor netherCoordColor = HudColor.WHITE;
     public boolean ArmorHUD = true;
     public boolean ArmorDurabilityBar = true;
     public boolean ShowEmpytSlot = true;
