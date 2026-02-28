@@ -2,23 +2,26 @@ package com.rtc.client;
 
 import com.rtc.client.armor.ArmorHUD;
 import com.rtc.client.config.KeyBindings;
-import com.rtc.client.gui.SettingsScreen;
+import com.rtc.client.gui.RTHudsConfigScreen;
+import com.rtc.client.hud.ConfigMigration;
 import com.rtc.client.hud.HudRenderer;
-import com.rtc.client.utilities.HudConfig;
+import eu.midnightdust.lib.config.MidnightConfig;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.Style;
 
-import static com.rtc.client.gui.SettingsOptions.*;
 
 @SuppressWarnings("unused")
 public class RTHudsClient implements ClientModInitializer {
 
     @Override
     public void onInitializeClient() {
+        ConfigMigration.migrateOnce();
+        MidnightConfig.init("rthuds", RTHudsConfigScreen.class);
 
         KeyBindings.register();
         HudRenderer.register();
@@ -29,10 +32,9 @@ public class RTHudsClient implements ClientModInitializer {
             if (mc.player == null) return;
 
             if (KeyBindings.toggleHud.consumeClick()) {
-                HudConfig.configManager.getConfig().showHud = !HudConfig.configManager.getConfig().showHud;
-                HudConfig.configManager.save();
-                boolean newState = HudConfig.configManager.getConfig().showHud;
-                SHOW_HUD.set(newState);
+                RTHudsConfigScreen.showHud = !RTHudsConfigScreen.showHud;
+                RTHudsConfigScreen.write("rthuds");
+                boolean newState = RTHudsConfigScreen.showHud;
                 Component stateText = Component.translatable(newState ? "rthuds.option.on" : "rthuds.option.off");
                 ChatFormatting color = newState ? ChatFormatting.GREEN : ChatFormatting.RED;
                 Component coloredState = stateText.copy().withStyle(Style.EMPTY.withColor(color).withBold(true));
@@ -42,18 +44,14 @@ public class RTHudsClient implements ClientModInitializer {
             }
 
             if (KeyBindings.openConfig.consumeClick()) {
-                if (mc.screen != null) {
-                    mc.setScreen(new SettingsScreen(mc.screen));
-                } else {
-                    mc.setScreen(new SettingsScreen(null));
-                }
+                Screen configScreen = MidnightConfig.getScreen(client.screen, "rthuds");
+                client.setScreen(configScreen);
             }
 
             if (KeyBindings.toggleArmorHud.consumeClick()) {
-                HudConfig.configManager.getConfig().ArmorHUD = !HudConfig.configManager.getConfig().ArmorHUD;
-                HudConfig.configManager.save();
-                boolean newState = HudConfig.configManager.getConfig().ArmorHUD;
-                SHOW_ARMOR_HUD.set(newState);
+                RTHudsConfigScreen.ArmorHUD = !RTHudsConfigScreen.ArmorHUD;
+                RTHudsConfigScreen.write("rthuds");
+                boolean newState = RTHudsConfigScreen.ArmorHUD;
                 Component stateText = Component.translatable(newState ? "rthuds.option.on" : "rthuds.option.off");
                 ChatFormatting color = newState ? ChatFormatting.GREEN : ChatFormatting.RED;
                 Component coloredState = stateText.copy().withStyle(Style.EMPTY.withColor(color).withBold(true));
