@@ -1,6 +1,6 @@
 package com.rtc.client.armor;
 
-import com.rtc.client.hud.ModConfig;
+import com.rtc.client.gui.RTHudsConfigScreen;
 import com.rtc.client.utilities.HudConfig;
 import net.fabricmc.fabric.api.client.rendering.v1.HudRenderCallback;
 import net.minecraft.client.Minecraft;
@@ -46,17 +46,16 @@ public class ArmorHUD {
 
     private static void render(GuiGraphics g, DeltaTracker deltaTracker) {
         Minecraft mc = Minecraft.getInstance();
-        var config = HudConfig.configManager.getConfig();
 
-        if (!config.ArmorHUD) return;
-        if (config.showF1 && mc.options.hideGui) return;
-        if (config.showDebug && mc.getDebugOverlay().showDebugScreen()) return;
+        if (!RTHudsConfigScreen.ArmorHUD) return;
+        if (RTHudsConfigScreen.showF1 && mc.options.hideGui) return;
+        if (RTHudsConfigScreen.showDebug && mc.getDebugOverlay().showDebugScreen()) return;
 
         Player player = mc.player;
         if (player == null) return;
 
-        int maxSlots = config.showHandItems ? 6 : 4;
-        boolean showEmpty = config.ShowEmpytSlot;
+        int maxSlots = RTHudsConfigScreen.showHandItems ? 6 : 4;
+        boolean showEmpty = RTHudsConfigScreen.ShowEmpytSlot;
 
         int visibleSlots = 0;
         int maxTextWidth = 0;
@@ -75,15 +74,15 @@ public class ArmorHUD {
 
         if (visibleSlots == 0) return;
 
-        float scale = config.ArmorScale;
+        float scale = RTHudsConfigScreen.ArmorScale;
         int step = Math.round((BASE_ICON_SIZE + BASE_GAP) * scale);
 
         int[] basePos = getBasePosition(mc, step, visibleSlots);
         int x = basePos[0];
         int y = basePos[1];
 
-        if (config.armorBackgroundStyle != null && !config.armorBackgroundStyle.name().equals("NONE")) {
-            boolean hudRight = config.ArmorLocation.name().startsWith("RIGHT");
+        if (RTHudsConfigScreen.armorBackgroundStyle != null && !RTHudsConfigScreen.armorBackgroundStyle.name().equals("NONE")) {
+            boolean hudRight = RTHudsConfigScreen.ArmorLocation.name().startsWith("RIGHT");
             int scaledIconSize = Math.round(BASE_ICON_SIZE * scale);
             int textOffset = Math.round((BASE_ICON_SIZE + 4) * scale);
 
@@ -106,7 +105,7 @@ public class ArmorHUD {
             int bgY = y - PADDING;
             int bgHeight = ((visibleSlots - 1) * step) + scaledIconSize + (PADDING * 2);
 
-            int bgColor = switch (config.armorBackgroundStyle.name()) {
+            int bgColor = switch (RTHudsConfigScreen.armorBackgroundStyle.name()) {
                 case "LIGHT" -> 0x80000000;
                 case "FULL" -> 0xFF000000;
                 default -> 0;
@@ -124,7 +123,7 @@ public class ArmorHUD {
                 continue;
             }
 
-            if (config.armorBackgroundStyle == ModConfig.ArmorBackgroundStyle.NONE) {
+            if (RTHudsConfigScreen.armorBackgroundStyle == RTHudsConfigScreen.ArmorBackgroundStyle.NONE) {
                 renderSlot(g, mc, stack, BLACK_EMPTY_TEXTURES[i], x, y, scale);
             } else {
                 renderSlot(g, mc, stack, WHITE_EMPTY_TEXTURES[i], x, y, scale);
@@ -144,7 +143,7 @@ public class ArmorHUD {
         int x = 0;
         int y = 0;
 
-        switch (HudConfig.configManager.getConfig().ArmorLocation) {
+        switch (RTHudsConfigScreen.ArmorLocation) {
             case LEFTUP -> {
                 x = 4 + PADDING;
                 y = 4 + PADDING;
@@ -186,20 +185,21 @@ public class ArmorHUD {
             g.blit(RenderType::guiTextured, emptyTexture, x, y, 0, 0, 16, 16, 16, 16);
         } else {
             g.renderItem(stack, x, y);
-            if (config.ArmorDurabilityBar) {
+            if (RTHudsConfigScreen.ArmorDurabilityBar) {
                 g.renderItemDecorations(mc.font, stack, x, y);
             }
         }
         pose.popPose();
 
         String durability = getDurabilityText(stack);
+        int inttextColor = Integer.parseInt(RTHudsConfigScreen.ArmorTextColor.replace("#", ""), 16);
         if (!durability.isEmpty()) {
-            var line = Component.literal(durability).withColor(config.ArmorTextColor.color);
+            var line = Component.literal(durability).withColor(inttextColor);
             int textWidth = mc.font.width(line);
             int textX = getTextX(x, textWidth, scale);
             int textY = y + Math.round((BASE_ICON_SIZE * scale - mc.font.lineHeight) / 2f);
 
-            g.drawString(mc.font, line, textX, textY, 0xFFFFFFFF, config.ArmorTextShadow);
+            g.drawString(mc.font, line, textX, textY, 0xFFFFFFFF, RTHudsConfigScreen.ArmorTextShadow);
         }
     }
 
@@ -209,7 +209,7 @@ public class ArmorHUD {
         int dmg = stack.getDamageValue();
         int remaining = max - dmg;
 
-        return switch (HudConfig.configManager.getConfig().ArmorHealthDurability) {
+        return switch (RTHudsConfigScreen.ArmorHealthDurability) {
             case NONE -> "";
             case REMAINING -> String.valueOf(remaining);
             case DAMAGE -> String.valueOf(dmg);
@@ -219,7 +219,7 @@ public class ArmorHUD {
     }
 
     private static int getTextX(int x, int textWidth, float scale) {
-        boolean hudRight = HudConfig.configManager.getConfig().ArmorLocation.name().startsWith("RIGHT");
+        boolean hudRight = RTHudsConfigScreen.ArmorLocation.name().startsWith("RIGHT");
         int offset = Math.round((BASE_ICON_SIZE + 4) * scale);
         return hudRight ? x - textWidth - 2 : x + offset;
     }

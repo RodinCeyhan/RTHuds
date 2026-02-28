@@ -19,7 +19,8 @@
   "depends": {
     "fabricloader": "*",
     "minecraft": ">=1.21.4",
-    "java": ">=${java_version}"
+    "java": ">=${java_version}",
+    "midnightlib": "*"
   },
   "recommends": {
     "modmenu": "*"
