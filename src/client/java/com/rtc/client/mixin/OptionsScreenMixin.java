@@ -1,6 +1,6 @@
 package com.rtc.client.mixin;
 
-import com.rtc.client.gui.SettingsScreen;
+import eu.midnightdust.lib.config.MidnightConfig;
 import net.minecraft.client.gui.screens.options.OptionsScreen;
 import net.minecraft.resources.ResourceLocation;
 import org.jetbrains.annotations.NotNull;
@@ -22,7 +22,7 @@ import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 
-@SuppressWarnings("unused")
+@SuppressWarnings({"unused", "FieldCanBeLocal"})
 @Mixin(OptionsScreen.class)
 public abstract class OptionsScreenMixin extends Screen {
 
@@ -87,7 +87,11 @@ public abstract class OptionsScreenMixin extends Screen {
 
         this.RTHButton = Button.builder(
                         Component.literal(""),
-                        (button) -> Minecraft.getInstance().setScreen(new SettingsScreen(this.parent))
+                        (button) -> {
+                            Minecraft client = Minecraft.getInstance();
+                            Screen configScreen = MidnightConfig.getScreen(client.screen, "rthuds");
+                            client.setScreen(configScreen);
+                        }
                 ).bounds(newX, newY, newHeight, newHeight)
                 .tooltip(Tooltip.create(Component.translatable("rthuds.settings.title")))
                 .build();
