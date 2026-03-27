@@ -39,7 +39,6 @@ public class ModConfig {
     public float ArmorScale = 1.0f;
     public enum ArmorDurabilityEnum {NONE, REMAINING, DAMAGE, PERCENTAGE, REMAINGINGandMAX}
     public ArmorDurabilityEnum ArmorHealthDurability = ArmorDurabilityEnum.REMAINING;
-    public HudColor ArmorTextColor = HudColor.WHITE;
     public boolean ArmorTextShadow = true;
     public boolean showHandItems = true;
     public int hudXPercent = 0;

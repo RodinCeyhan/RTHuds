@@ -2,12 +2,12 @@ package com.rtc.client.hud;
 
 import com.rtc.client.gui.RTHudsConfigScreen;
 import com.rtc.client.utilities.HudConfig;
-import net.fabricmc.fabric.api.client.rendering.v1.HudRenderCallback;
+import net.fabricmc.fabric.api.client.rendering.v1.hud.HudElementRegistry;
 import net.minecraft.client.DeltaTracker;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.Minecraft;
 import net.minecraft.network.chat.Style;
 import net.minecraft.util.Mth;
@@ -18,14 +18,20 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
+import static com.rtc.client.RTHudsClient.HUD_ID;
+
 @SuppressWarnings("ALL")
 public class HudRenderer {
 
     private static DecimalFormat dfX, dfY, dfZ;
     private static int lastDecimalPlaces = -1;
+    private static boolean registered = false;
 
     public static void register() {
-        HudRenderCallback.EVENT.register(HudRenderer::onRender);
+        if (!registered) {
+            HudElementRegistry.addLast(HUD_ID, HudRenderer::onRender);
+            registered = true;
+        }
     }
 
     private static void updateFormatters(int decimalPlaces) {
@@ -55,7 +61,7 @@ public class HudRenderer {
         return new DecimalFormat(pattern.toString());
     }
 
-    private static void onRender(GuiGraphics guiGraphics, DeltaTracker deltaTracker) {
+    private static void onRender(GuiGraphicsExtractor guiGraphics, DeltaTracker deltaTracker) {
         var config = HudConfig.configManager.getConfig();
         if (!RTHudsConfigScreen.showHud) return;
 
@@ -191,7 +197,7 @@ public class HudRenderer {
                 lineX = startX;
             }
 
-            guiGraphics.drawString(mc.font, lineItem, lineX, lineY, 0xFFFFFFFF, RTHudsConfigScreen.textShadow);
+            guiGraphics.text(mc.font, lineItem, lineX, lineY, 0xFFFFFFFF, RTHudsConfigScreen.textShadow);
         }
     }
 

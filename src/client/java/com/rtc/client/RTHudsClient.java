@@ -13,10 +13,14 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.Style;
+import net.minecraft.resources.Identifier;
 
 
 @SuppressWarnings("unused")
 public class RTHudsClient implements ClientModInitializer {
+
+    public static final Identifier HUD_ID = Identifier.fromNamespaceAndPath("rthuds", "hud");
+    public static final Identifier ARMOR_ID = Identifier.fromNamespaceAndPath("rthuds", "armor");
 
     @Override
     public void onInitializeClient() {
@@ -40,7 +44,7 @@ public class RTHudsClient implements ClientModInitializer {
                 Component coloredState = stateText.copy().withStyle(Style.EMPTY.withColor(color).withBold(true));
                 Component prefix = Component.translatable("rthuds.settings.hud").withStyle(ChatFormatting.WHITE).append(Component.literal(": "));
                 Component fullMessage = Component.empty().append(prefix).append(coloredState);
-                mc.player.displayClientMessage(fullMessage, true);
+                mc.gui.setOverlayMessage(fullMessage, true);
             }
 
             if (KeyBindings.openConfig.consumeClick()) {
@@ -57,7 +61,7 @@ public class RTHudsClient implements ClientModInitializer {
                 Component coloredState = stateText.copy().withStyle(Style.EMPTY.withColor(color).withBold(true));
                 Component prefix = Component.translatable("rthuds.settings.armorhud").withStyle(ChatFormatting.WHITE).append(Component.literal(": "));
                 Component fullMessage = Component.empty().append(prefix).append(coloredState);
-                mc.player.displayClientMessage(fullMessage, true);
+                mc.gui.setOverlayMessage(fullMessage, true);
             }
         });
     }

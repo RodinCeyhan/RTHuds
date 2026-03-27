@@ -13,7 +13,7 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.components.Tooltip;
 import net.minecraft.client.gui.screens.Screen;
@@ -23,7 +23,7 @@ import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 
-@SuppressWarnings({"unused", "FieldCanBeLocal"})
+@SuppressWarnings({"unused", "FieldCanBeLocal", "SuspiciousNameCombination"})
 @Mixin(OptionsScreen.class)
 public abstract class OptionsScreenMixin extends Screen {
 
@@ -100,9 +100,9 @@ public abstract class OptionsScreenMixin extends Screen {
         this.addRenderableWidget(this.RTHButton);
     }
 
-    @Override
-    public void render(@NotNull GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
-        super.render(guiGraphics, mouseX, mouseY, partialTick);
+    @Unique
+    public void render(@NotNull GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY, float delta) {
+        super.extractRenderState(guiGraphics, mouseX, mouseY, delta);
 
         int textureWidth = 9;
         int textureHeight = 9;

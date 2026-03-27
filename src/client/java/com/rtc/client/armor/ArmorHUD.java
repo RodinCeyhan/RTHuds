@@ -2,9 +2,9 @@ package com.rtc.client.armor;
 
 import com.rtc.client.gui.RTHudsConfigScreen;
 import com.rtc.client.utilities.HudConfig;
-import net.fabricmc.fabric.api.client.rendering.v1.HudRenderCallback;
+import net.fabricmc.fabric.api.client.rendering.v1.hud.HudElementRegistry;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.DeltaTracker;
 import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.world.entity.EquipmentSlot;
@@ -13,7 +13,9 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.resources.Identifier;
 import net.minecraft.network.chat.Component;
 
-@SuppressWarnings({"deprecation", "unused", "UnnecessaryLocalVariable"})
+import static com.rtc.client.RTHudsClient.ARMOR_ID;
+
+@SuppressWarnings({"unused", "UnnecessaryLocalVariable"})
 public class ArmorHUD {
 
     private static final Identifier BLACK_EMPTY_HELMET = Identifier.fromNamespaceAndPath("rthuds", "textures/helmet.png");
@@ -39,12 +41,17 @@ public class ArmorHUD {
     private static final int BASE_ICON_SIZE = 16;
     private static final int BASE_GAP = 2;
     private static final int PADDING = 2;
+    private static boolean registered = false;
+
 
     public static void register() {
-        HudRenderCallback.EVENT.register(ArmorHUD::render);
+        if (!registered) {
+            HudElementRegistry.addLast(ARMOR_ID, ArmorHUD::render);
+            registered = true;
+        }
     }
 
-    private static void render(GuiGraphics g, DeltaTracker deltaTracker) {
+    private static void render(GuiGraphicsExtractor g, DeltaTracker deltaTracker) {
         Minecraft mc = Minecraft.getInstance();
 
         if (!RTHudsConfigScreen.ArmorHUD) return;
@@ -172,7 +179,7 @@ public class ArmorHUD {
         return new int[]{x, y};
     }
 
-    private static void renderSlot(GuiGraphics g, Minecraft mc, ItemStack stack, Identifier emptyTexture, int x, int y, float scale) {
+    private static void renderSlot(GuiGraphicsExtractor g, Minecraft mc, ItemStack stack, Identifier emptyTexture, int x, int y, float scale) {
         var config = HudConfig.configManager.getConfig();
         var pose = g.pose();
 
@@ -184,9 +191,9 @@ public class ArmorHUD {
         if (stack.isEmpty()) {
             g.blit(RenderPipelines.GUI_TEXTURED, emptyTexture, x, y, 0, 0, 16, 16, 16, 16);
         } else {
-            g.renderItem(stack, x, y);
+            g.item(stack, x, y);
             if (RTHudsConfigScreen.ArmorDurabilityBar) {
-                g.renderItemDecorations(mc.font, stack, x, y);
+                g.itemDecorations(mc.font, stack, x, y);
             }
         }
         pose.popMatrix();
@@ -199,7 +206,7 @@ public class ArmorHUD {
             int textX = getTextX(x, textWidth, scale);
             int textY = y + Math.round((BASE_ICON_SIZE * scale - mc.font.lineHeight) / 2f);
 
-            g.drawString(mc.font, line, textX, textY, 0xFFFFFFFF, RTHudsConfigScreen.ArmorTextShadow);
+            g.text(mc.font, line, textX, textY, 0xFFFFFFFF, RTHudsConfigScreen.ArmorTextShadow);
         }
     }
 
