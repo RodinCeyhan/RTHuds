@@ -3,7 +3,6 @@ package com.rtc.client;
 import com.rtc.client.armor.ArmorHUD;
 import com.rtc.client.config.KeyBindings;
 import com.rtc.client.gui.RTHudsConfigScreen;
-import com.rtc.client.hud.ConfigMigration;
 import com.rtc.client.hud.HudRenderer;
 import eu.midnightdust.lib.config.MidnightConfig;
 import net.fabricmc.api.ClientModInitializer;
@@ -15,7 +14,6 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.Style;
 import net.minecraft.resources.Identifier;
 
-
 @SuppressWarnings("unused")
 public class RTHudsClient implements ClientModInitializer {
 
@@ -24,7 +22,6 @@ public class RTHudsClient implements ClientModInitializer {
 
     @Override
     public void onInitializeClient() {
-        ConfigMigration.migrateOnce();
         MidnightConfig.init("rthuds", RTHudsConfigScreen.class);
 
         KeyBindings.register();

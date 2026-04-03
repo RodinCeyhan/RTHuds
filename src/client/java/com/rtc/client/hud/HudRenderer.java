@@ -1,7 +1,6 @@
 package com.rtc.client.hud;
 
 import com.rtc.client.gui.RTHudsConfigScreen;
-import com.rtc.client.utilities.HudConfig;
 import net.fabricmc.fabric.api.client.rendering.v1.hud.HudElementRegistry;
 import net.minecraft.client.DeltaTracker;
 import net.minecraft.client.player.LocalPlayer;
@@ -62,7 +61,6 @@ public class HudRenderer {
     }
 
     private static void onRender(GuiGraphicsExtractor guiGraphics, DeltaTracker deltaTracker) {
-        var config = HudConfig.configManager.getConfig();
         if (!RTHudsConfigScreen.showHud) return;
 
         Minecraft mc = Minecraft.getInstance();
@@ -130,7 +128,7 @@ public class HudRenderer {
                 }
 
                 if (!line.getString().isEmpty()) lines.add(line);
-                addNetherCoords(lines, player, config, valueColor, intnetherColor);
+                addNetherCoords(lines, player, valueColor, intnetherColor);
                 break;
 
             case LAYOUT_2:
@@ -151,7 +149,7 @@ public class HudRenderer {
                 if (RTHudsConfigScreen.showFPS) {
                     lines.add(Component.literal("FPS: ").withColor(intfpsColor).append(Component.literal(String.valueOf(mc.getFps())).withColor(valueColor)));
                 }
-                addNetherCoords(lines, player, config, valueColor, intnetherColor);
+                addNetherCoords(lines, player, valueColor, intnetherColor);
                 break;
         }
 
@@ -201,7 +199,7 @@ public class HudRenderer {
         }
     }
 
-    private static void addNetherCoords(List<Component> lines, LocalPlayer player, ModConfig config, int valueColor, int intnetherColor) {
+    private static void addNetherCoords(List<Component> lines, LocalPlayer player, int valueColor, int intnetherColor) {
         if (!RTHudsConfigScreen.toggleNetherCoordinateConversion || player.level() == null) return;
 
         boolean isOverworld = player.level().dimension() == Level.OVERWORLD;

@@ -1,7 +1,6 @@
 package com.rtc.client.armor;
 
 import com.rtc.client.gui.RTHudsConfigScreen;
-import com.rtc.client.utilities.HudConfig;
 import net.fabricmc.fabric.api.client.rendering.v1.hud.HudElementRegistry;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
@@ -180,7 +179,6 @@ public class ArmorHUD {
     }
 
     private static void renderSlot(GuiGraphicsExtractor g, Minecraft mc, ItemStack stack, Identifier emptyTexture, int x, int y, float scale) {
-        var config = HudConfig.configManager.getConfig();
         var pose = g.pose();
 
         pose.pushMatrix();
