@@ -3,7 +3,7 @@
   "id": "rthuds",
   "version": "${mod_version}",
   "name": "RTHuds",
-  "description": "Shows coordinates, viewpoint, direction, FPS and more.",
+  "description": "A modern, modular, and fully customizable HUD system for Minecraft designed for flexibility and performance across all gameplay styles.",
   "authors": [
     "RodinToprak"
   ],
