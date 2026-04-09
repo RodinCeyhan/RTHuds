@@ -1,37 +1,41 @@
 package com.rtc.client.mixin;
 
 import eu.midnightdust.lib.config.MidnightConfig;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.components.SpriteIconButton;
+import net.minecraft.client.gui.layouts.HeaderAndFooterLayout;
 import net.minecraft.client.gui.screens.options.OptionsScreen;
-import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.resources.Identifier;
-import org.jetbrains.annotations.NotNull;
-import org.spongepowered.asm.mixin.Final;
-import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.Mutable;
-import org.spongepowered.asm.mixin.Unique;
+import org.spongepowered.asm.mixin.*;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.components.Button;
-import net.minecraft.client.gui.components.Tooltip;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
 
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Objects;
 
-@SuppressWarnings({"unused", "FieldCanBeLocal", "SuspiciousNameCombination"})
+import static com.rtc.client.RTHudsClient.MOD_ID;
+
+@SuppressWarnings("ALL")
 @Mixin(OptionsScreen.class)
 public abstract class OptionsScreenMixin extends Screen {
 
-    @Unique
-    private static final Identifier SETTINGS = Identifier.fromNamespaceAndPath("rthuds", "textures/settings_9x8.png");
+    @Shadow
+    @Final
+    private HeaderAndFooterLayout layout;
+
+    Minecraft client = Minecraft.getInstance();
 
     @Unique
-    public Button RTHButton = null;
+    SpriteIconButton rthudssettingsbtn = SpriteIconButton.builder(
+                    Component.translatable("rthuds.midnightconfig.title"),
+                    (buttonWidget) -> Objects.requireNonNull(client).setScreen(MidnightConfig.getScreen(client.screen, "rthuds")), true)
+            .sprite(Identifier.fromNamespaceAndPath(MOD_ID,"icon/"+MOD_ID), 9, 9).size(20, 20).build();
 
     @Mutable
     @Unique
@@ -48,8 +52,8 @@ public abstract class OptionsScreenMixin extends Screen {
 
         List<Button> buttons = new ArrayList<>();
         for (var element : this.children()) {
-            if (element instanceof Button) {
-                buttons.add((Button) element);
+            if (element instanceof Button b) {
+                buttons.add(b);
             }
         }
 
@@ -65,14 +69,48 @@ public abstract class OptionsScreenMixin extends Screen {
 
         if (telemetryButton == null) return;
 
+        int newHeight = telemetryButton.getHeight();
+
+        this.addRenderableWidget(rthudssettingsbtn);
+        rthuds$updateButtonPosition();
+    }
+
+    @Inject(method = "repositionElements", at = @At("TAIL"))
+    private void onResize(CallbackInfo ci) {
+        rthuds$updateButtonPosition();
+    }
+
+    @Unique
+    private void rthuds$updateButtonPosition() {
+        if (this.rthudssettingsbtn == null) return;
+
+        List<Button> buttons = new ArrayList<>();
+        for (var element : this.children()) {
+            if (element instanceof Button b) {
+                buttons.add(b);
+            }
+        }
+
+        Button telemetryButton = null;
+        for (Button b : buttons) {
+            if (b.getMessage().equals(Component.translatable("options.telemetry"))) {
+                telemetryButton = b;
+                break;
+            }
+        }
+
+        if (telemetryButton == null) return;
+
         int targetX = telemetryButton.getX();
         int tolerance = 6;
+
         List<Button> sameColumn = new ArrayList<>();
         for (Button b : buttons) {
             if (Math.abs(b.getX() - targetX) <= tolerance) {
                 sameColumn.add(b);
             }
         }
+
         sameColumn.sort(Comparator.comparingInt(Button::getY));
 
         int gap = 4;
@@ -86,32 +124,8 @@ public abstract class OptionsScreenMixin extends Screen {
         int newX = telemetryButton.getX() - gap - 20;
         int newY = telemetryButton.getY();
 
-        this.RTHButton = Button.builder(
-                        Component.literal(""),
-                        (button) -> {
-                            Minecraft client = Minecraft.getInstance();
-                            Screen configScreen = MidnightConfig.getScreen(client.screen, "rthuds");
-                            client.setScreen(configScreen);
-                        }
-                ).bounds(newX, newY, newHeight, newHeight)
-                .tooltip(Tooltip.create(Component.translatable("rthuds.settings.title")))
-                .build();
-
-        this.addRenderableWidget(this.RTHButton);
-    }
-
-    @Unique
-    public void render(@NotNull GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY, float delta) {
-        super.extractRenderState(guiGraphics, mouseX, mouseY, delta);
-
-        int textureWidth = 9;
-        int textureHeight = 9;
-
-        int centerX = this.RTHButton.getX() + (this.RTHButton.getWidth() / 2);
-        int centerY = this.RTHButton.getY() + (this.RTHButton.getHeight() / 2);
-
-        int drawX = centerX - (textureWidth / 2);
-        int drawY = centerY - (textureHeight / 2);
-        guiGraphics.blit(RenderPipelines.GUI_TEXTURED, SETTINGS, drawX, drawY, 0, 0, textureWidth, textureHeight, textureWidth, textureHeight);
+        this.rthudssettingsbtn.setPosition(newX, newY);
+        this.rthudssettingsbtn.setWidth(newHeight);
+        this.rthudssettingsbtn.setHeight(newHeight);
     }
 }

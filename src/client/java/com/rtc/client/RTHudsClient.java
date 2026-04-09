@@ -16,6 +16,7 @@ import net.minecraft.resources.Identifier;
 
 @SuppressWarnings("unused")
 public class RTHudsClient implements ClientModInitializer {
+    public static final String MOD_ID = "rthuds";
 
     public static final Identifier HUD_ID = Identifier.fromNamespaceAndPath("rthuds", "hud");
     public static final Identifier ARMOR_ID = Identifier.fromNamespaceAndPath("rthuds", "armor");
