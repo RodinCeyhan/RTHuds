@@ -17,6 +17,7 @@ import net.minecraft.network.chat.Style;
 
 @SuppressWarnings("unused")
 public class RTHudsClient implements ClientModInitializer {
+    public static final String MOD_ID = "rthuds";
 
     @Override
     public void onInitializeClient() {
