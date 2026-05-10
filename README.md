@@ -43,6 +43,8 @@ Choose your preferred platform to download RTHuds.
 ### General
 - Info HUD Toggle
 - Armor HUD Toggle
+- Hide F1 Mode
+- Hide Debug (F3) Screen
 
 ### Appearance
 - Info HUD Layout
