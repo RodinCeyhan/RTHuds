@@ -2,64 +2,93 @@ package com.rtc.client;
 
 import com.rtc.client.armor.ArmorHUD;
 import com.rtc.client.config.KeyBindings;
-import com.rtc.client.gui.RTHudsConfigScreen;
-import com.rtc.client.hud.ConfigMigration;
+import com.rtc.client.gui.ConfigScreen;
+import com.rtc.client.gui.ModConfig;
 import com.rtc.client.hud.HudRenderer;
-import eu.midnightdust.lib.config.MidnightConfig;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.Style;
+import net.fabricmc.fabric.api.client.command.v2.ClientCommandRegistrationCallback;
+import static net.fabricmc.fabric.api.client.command.v2.ClientCommandManager.literal;
 
-
-@SuppressWarnings("unused")
+@SuppressWarnings({"unused", "SpellCheckingInspection"})
 public class RTHudsClient implements ClientModInitializer {
     public static final String MOD_ID = "rthuds";
+    private static boolean settingsMenu = false;
 
     @Override
     public void onInitializeClient() {
-        ConfigMigration.migrateOnce();
-        MidnightConfig.init("rthuds", RTHudsConfigScreen.class);
-
+        ModConfig.INSTANCE.load();
         KeyBindings.register();
         HudRenderer.register();
         ArmorHUD.register();
+
+        Runtime.getRuntime().addShutdownHook(new Thread(() -> ModConfig.INSTANCE.save()));
+
+        ClientCommandRegistrationCallback.EVENT.register((dispatcher, registryAccess) -> dispatcher.register(
+                literal("rthuds").executes(context -> {
+                    settingsMenu = true;
+                    return 0;
+                })
+        ));
 
         ClientTickEvents.END_CLIENT_TICK.register(client -> {
             Minecraft mc = Minecraft.getInstance();
             if (mc.player == null) return;
 
             if (KeyBindings.toggleHud.consumeClick()) {
-                RTHudsConfigScreen.showHud = !RTHudsConfigScreen.showHud;
-                RTHudsConfigScreen.write("rthuds");
-                boolean newState = RTHudsConfigScreen.showHud;
-                Component stateText = Component.translatable(newState ? "rthuds.option.on" : "rthuds.option.off");
-                ChatFormatting color = newState ? ChatFormatting.GREEN : ChatFormatting.RED;
-                Component coloredState = stateText.copy().withStyle(Style.EMPTY.withColor(color).withBold(true));
-                Component prefix = Component.translatable("rthuds.settings.hud").withStyle(ChatFormatting.WHITE).append(Component.literal(": "));
-                Component fullMessage = Component.empty().append(prefix).append(coloredState);
-                mc.player.displayClientMessage(fullMessage, true);
+                boolean state = ModConfig.toggleHud(ModConfig.keyHudType.INFO);
+                sendHudMessage("rthuds.settings.hud", state);
             }
 
             if (KeyBindings.openConfig.consumeClick()) {
-                Screen configScreen = MidnightConfig.getScreen(client.screen, "rthuds");
-                client.setScreen(configScreen);
+                if (client.player != null) {
+                    client.setScreen(ConfigScreen.create(client.screen));
+                }
             }
 
             if (KeyBindings.toggleArmorHud.consumeClick()) {
-                RTHudsConfigScreen.ArmorHUD = !RTHudsConfigScreen.ArmorHUD;
-                RTHudsConfigScreen.write("rthuds");
-                boolean newState = RTHudsConfigScreen.ArmorHUD;
-                Component stateText = Component.translatable(newState ? "rthuds.option.on" : "rthuds.option.off");
-                ChatFormatting color = newState ? ChatFormatting.GREEN : ChatFormatting.RED;
-                Component coloredState = stateText.copy().withStyle(Style.EMPTY.withColor(color).withBold(true));
-                Component prefix = Component.translatable("rthuds.settings.armorhud").withStyle(ChatFormatting.WHITE).append(Component.literal(": "));
-                Component fullMessage = Component.empty().append(prefix).append(coloredState);
-                mc.player.displayClientMessage(fullMessage, true);
+                boolean state = ModConfig.toggleHud(ModConfig.keyHudType.ARMOR);
+                sendHudMessage("rthuds.settings.armorhud", state);
             }
+
         });
+
+        ClientTickEvents.END_CLIENT_TICK.register(this::settingsMenuTick);
+    }
+
+    private void settingsMenuTick(Minecraft minecraft) {
+        if (settingsMenu) {
+            settingsMenu = false;
+            Minecraft client = Minecraft.getInstance();
+            client.setScreen(ConfigScreen.create(client.screen));
+        }
+    }
+
+    private void sendHudMessage(String key, boolean state) {
+        Minecraft mc = Minecraft.getInstance();
+        Component stateText = Component.translatable(state ? "rthuds.option.on" : "rthuds.option.off");
+        ChatFormatting color = state ? ChatFormatting.GREEN : ChatFormatting.RED;
+
+        Component coloredState = stateText.copy()
+                .withStyle(Style.EMPTY.withColor(color).withBold(true));
+
+        Component prefix = Component.translatable(key)
+                .withStyle(ChatFormatting.WHITE)
+                .append(Component.literal(": "));
+
+        Component fullMessage = Component.empty()
+                .append(prefix)
+                .append(coloredState);
+
+        if (mc.player != null) {
+            mc.player.displayClientMessage(fullMessage, true);
+        }
+    }
+
+    public static void onConfigSaved(ModConfig config) {
     }
 }

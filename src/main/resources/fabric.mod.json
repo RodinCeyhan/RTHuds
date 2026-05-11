@@ -3,11 +3,11 @@
   "id": "rthuds",
   "version": "${mod_version}",
   "name": "RTHuds",
-  "description": "Shows coordinates, viewpoint, direction, FPS and more.",
+  "description": "Coordinates show yaw, pitch, direction, fps, converter and armor information.",
   "authors": [
     "RodinToprak"
   ],
-  "license": "MIT",
+  "license": "${license}",
   "icon": "assets/rthuds/textures/rthuds.png",
   "environment": "client",
   "entrypoints": {
@@ -20,7 +20,11 @@
     "fabricloader": "*",
     "minecraft": ">=1.21.9",
     "java": ">=${java_version}",
-    "midnightlib": "*"
+    "yet_another_config_lib_v3": ">=${yacl_version}"
+  },
+  "contact": {
+    "sources": "https://github.com/RodinCeyhan/RTHuds",
+    "issues": "https://github.com/RodinCeyhan/RTHuds/issues"
   },
   "recommends": {
     "modmenu": "*"

@@ -15,6 +15,7 @@ public class KeyBindings {
     public static KeyMapping toggleArmorHud;
 
     public static void register() {
+
         toggleHud = KeyBindingHelper.registerKeyBinding(new KeyMapping(
                 "key.rthuds.toggle",
                 InputConstants.Type.KEYSYM,
