@@ -74,7 +74,6 @@
   "rthuds.settings.location.rightdown": "Δεξιά κάτω",
   "appearance.settings.armorhud.textstyle": "Στυλ κειμένου Armor HUD",
   "appearance.settings.armorhud.textstyle.description": "Σας επιτρέπει να αλλάξετε τα στυλ του κειμένου υγείας του Armor HUD σε None, Remaining, Percentage, Damage και Remaining/Max.",
-  "appearance.settings.armorhud.": "Είδη χειρός Armor HUD",
   "color.settings": "Χρώμα",
   "color.settings.infohud": "Πληροφορίες HUD Χρώματα",
   "color.settings.infohud.coordinates": "Χρώμα συντεταγμένων",
