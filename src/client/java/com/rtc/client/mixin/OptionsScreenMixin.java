@@ -1,6 +1,6 @@
 package com.rtc.client.mixin;
 
-import eu.midnightdust.lib.config.MidnightConfig;
+import com.rtc.client.gui.ConfigScreen;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.components.SpriteIconButton;
 import net.minecraft.client.gui.layouts.HeaderAndFooterLayout;
@@ -17,11 +17,10 @@ import net.minecraft.network.chat.Component;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
-import java.util.Objects;
 
 import static com.rtc.client.RTHudsClient.MOD_ID;
 
-@SuppressWarnings("ALL")
+@SuppressWarnings({"SpellCheckingInspection", "IfStatementWithIdenticalBranches", "unused", "FieldCanBeLocal", "SuspiciousNameCombination"})
 @Mixin(OptionsScreen.class)
 public abstract class OptionsScreenMixin extends Screen {
 
@@ -29,13 +28,14 @@ public abstract class OptionsScreenMixin extends Screen {
     @Final
     private HeaderAndFooterLayout layout;
 
+    @Unique
     Minecraft client = Minecraft.getInstance();
 
     @Unique
     SpriteIconButton rthudssettingsbtn = SpriteIconButton.builder(
-                    Component.translatable("rthuds.midnightconfig.title"),
-                    (buttonWidget) -> Objects.requireNonNull(client).setScreen(MidnightConfig.getScreen(client.screen, "rthuds")), true)
-            .sprite(Identifier.fromNamespaceAndPath(MOD_ID,"icon/"+MOD_ID), 9, 9).size(20, 20).build();
+                    Component.translatable("rthuds"),
+                    (buttonWidget) -> client.setScreen(ConfigScreen.create(client.screen)), true)
+            .sprite(Identifier.fromNamespaceAndPath(MOD_ID, "icon/" + MOD_ID), 9, 9).size(20, 20).build();
 
     @Mutable
     @Unique
@@ -60,19 +60,31 @@ public abstract class OptionsScreenMixin extends Screen {
         if (buttons.isEmpty()) return;
 
         Button telemetryButton = null;
+        Button resourcePackButton = null;
         for (Button b : buttons) {
             if (b.getMessage().equals(Component.translatable("options.telemetry"))) {
                 telemetryButton = b;
                 break;
             }
         }
+        for (Button b : buttons) {
+            if (b.getMessage().equals(Component.translatable("options.resourcepack"))) {
+                resourcePackButton = b;
+                break;
+            }
+        }
 
-        if (telemetryButton == null) return;
+        if (telemetryButton == null) {
+            if (resourcePackButton == null) return;
 
-        int newHeight = telemetryButton.getHeight();
-
-        this.addRenderableWidget(rthudssettingsbtn);
-        rthuds$updateButtonPosition();
+            int newHeight = resourcePackButton.getHeight();
+            this.addRenderableWidget(rthudssettingsbtn);
+            rthuds$updateButtonPosition();
+        } else {
+            int newHeight = telemetryButton.getHeight();
+            this.addRenderableWidget(rthudssettingsbtn);
+            rthuds$updateButtonPosition();
+        }
     }
 
     @Inject(method = "repositionElements", at = @At("TAIL"))
@@ -92,40 +104,77 @@ public abstract class OptionsScreenMixin extends Screen {
         }
 
         Button telemetryButton = null;
+        Button resourcePackButton = null;
         for (Button b : buttons) {
             if (b.getMessage().equals(Component.translatable("options.telemetry"))) {
                 telemetryButton = b;
                 break;
             }
         }
-
-        if (telemetryButton == null) return;
-
-        int targetX = telemetryButton.getX();
-        int tolerance = 6;
-
-        List<Button> sameColumn = new ArrayList<>();
         for (Button b : buttons) {
-            if (Math.abs(b.getX() - targetX) <= tolerance) {
-                sameColumn.add(b);
+            if (b.getMessage().equals(Component.translatable("options.resourcepack"))) {
+                resourcePackButton = b;
+                break;
             }
         }
 
-        sameColumn.sort(Comparator.comparingInt(Button::getY));
+        if (telemetryButton == null) {
+            if (resourcePackButton == null) return;
 
-        int gap = 4;
-        int index = sameColumn.indexOf(telemetryButton);
-        if (index >= 0 && index < sameColumn.size() - 1) {
-            Button below = sameColumn.get(index + 1);
-            gap = below.getY() - (telemetryButton.getY() + telemetryButton.getHeight());
+            int targetX = resourcePackButton.getX();
+            int tolerance = 6;
+
+            List<Button> sameColumn = new ArrayList<>();
+            for (Button b : buttons) {
+                if (Math.abs(b.getX() - targetX) <= tolerance) {
+                    sameColumn.add(b);
+                }
+            }
+
+            sameColumn.sort(Comparator.comparingInt(Button::getY));
+
+            int gap = 4;
+            int index = sameColumn.indexOf(resourcePackButton);
+            if (index >= 0 && index < sameColumn.size() - 1) {
+                Button below = sameColumn.get(index + 1);
+                gap = below.getY() - (resourcePackButton.getY() + resourcePackButton.getHeight());
+            }
+
+            int newHeight = resourcePackButton.getHeight();
+            int newX = resourcePackButton.getX() - gap - 20;
+            int newY = resourcePackButton.getY();
+
+            this.rthudssettingsbtn.setPosition(newX, newY);
+            this.rthudssettingsbtn.setWidth(newHeight);
+            this.rthudssettingsbtn.setHeight(newHeight);
+
+        } else {
+            int targetX = telemetryButton.getX();
+            int tolerance = 6;
+
+            List<Button> sameColumn = new ArrayList<>();
+            for (Button b : buttons) {
+                if (Math.abs(b.getX() - targetX) <= tolerance) {
+                    sameColumn.add(b);
+                }
+            }
+
+            sameColumn.sort(Comparator.comparingInt(Button::getY));
+
+            int gap = 4;
+            int index = sameColumn.indexOf(telemetryButton);
+            if (index >= 0 && index < sameColumn.size() - 1) {
+                Button below = sameColumn.get(index + 1);
+                gap = below.getY() - (telemetryButton.getY() + telemetryButton.getHeight());
+            }
+
+            int newHeight = telemetryButton.getHeight();
+            int newX = telemetryButton.getX() - gap - 20;
+            int newY = telemetryButton.getY();
+
+            this.rthudssettingsbtn.setPosition(newX, newY);
+            this.rthudssettingsbtn.setWidth(newHeight);
+            this.rthudssettingsbtn.setHeight(newHeight);
         }
-
-        int newHeight = telemetryButton.getHeight();
-        int newX = telemetryButton.getX() - gap - 20;
-        int newY = telemetryButton.getY();
-
-        this.rthudssettingsbtn.setPosition(newX, newY);
-        this.rthudssettingsbtn.setWidth(newHeight);
-        this.rthudssettingsbtn.setHeight(newHeight);
     }
 }

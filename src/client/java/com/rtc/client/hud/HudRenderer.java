@@ -1,6 +1,6 @@
 package com.rtc.client.hud;
 
-import com.rtc.client.gui.RTHudsConfigScreen;
+import com.rtc.client.gui.ModConfig;
 import net.fabricmc.fabric.api.client.rendering.v1.hud.HudElementRegistry;
 import net.minecraft.client.DeltaTracker;
 import net.minecraft.client.player.LocalPlayer;
@@ -19,7 +19,7 @@ import java.util.Locale;
 
 import static com.rtc.client.RTHudsClient.HUD_ID;
 
-@SuppressWarnings("ALL")
+@SuppressWarnings("SpellCheckingInspection")
 public class HudRenderer {
 
     private static DecimalFormat dfX, dfY, dfZ;
@@ -48,29 +48,30 @@ public class HudRenderer {
         if (decimalPlaces == 6) {
             places = (axis == Axis.Y) ? 5 : 3;
         } else {
-            places = Math.max(0, Math.min(decimalPlaces, 5));
+            places = Math.clamp(decimalPlaces, 0, 5);
         }
 
         StringBuilder pattern = new StringBuilder("0");
         if (places > 0) {
             pattern.append(".");
-            pattern.append("0".repeat(places));
+            pattern.repeat("0", places);
         }
 
         return new DecimalFormat(pattern.toString());
     }
 
+    @SuppressWarnings("SpellCheckingInspection")
     private static void onRender(GuiGraphicsExtractor guiGraphics, DeltaTracker deltaTracker) {
-        if (!RTHudsConfigScreen.showHud) return;
+        if (!ModConfig.InfoHud()) return;
 
         Minecraft mc = Minecraft.getInstance();
-        if (RTHudsConfigScreen.showF1 && mc.options.hideGui) return;
-        if (RTHudsConfigScreen.showDebug && mc.getDebugOverlay().showDebugScreen()) return;
+        if (ModConfig.HideGui() && mc.options.hideGui) return;
+        if (ModConfig.DebugGui() && mc.getDebugOverlay().showDebugScreen()) return;
 
         LocalPlayer player = mc.player;
         if (player == null) return;
 
-        updateFormatters(RTHudsConfigScreen.decimalPlaces);
+        updateFormatters(ModConfig.infoHudDecimalPlaces());
 
         var camera = mc.gameRenderer.getMainCamera();
         float yaw = Mth.wrapDegrees(camera.yRot());
@@ -83,19 +84,21 @@ public class HudRenderer {
         String yText = dfY.format(player.getY());
         String zText = dfZ.format(player.getZ());
 
-        int intxyzColor = Integer.parseInt(RTHudsConfigScreen.xyzColor.replace("#", ""), 16);
-        int intyawColor = Integer.parseInt(RTHudsConfigScreen.yawColor.replace("#", ""), 16);
-        int intpitchColor = Integer.parseInt(RTHudsConfigScreen.pitchColor.replace("#", ""), 16);
-        int intdirectionColor = Integer.parseInt(RTHudsConfigScreen.directionColor.replace("#", ""), 16);
-        int intfpsColor = Integer.parseInt(RTHudsConfigScreen.fpsColor.replace("#", ""), 16);
-        int intnetherColor = Integer.parseInt(RTHudsConfigScreen.netherCoordColor.replace("#", ""), 16);
+        ModConfig options = ModConfig.get();
+        int intxyzColor = options.coordinatesColor;
+        int intyawColor = options.yawColor;
+        int intpitchColor = options.pitchColor;
+        int intdirectionColor = options.directionColor;
+        int intfpsColor = options.fpsColor;
+        int intnetherColor = options.coordinateConverterColor;
 
-        switch (RTHudsConfigScreen.layout) {
-            case LAYOUT_1:
+
+        switch (ModConfig.infoHudDirection()) {
+            case HORIZONTAL:
                 MutableComponent line = Component.empty();
                 boolean needsSeparator = false;
 
-                if (RTHudsConfigScreen.showCoords) {
+                if (ModConfig.showCoordinates()) {
                     line.append(Component.literal("XYZ: ").withColor(intxyzColor))
                             .append(Component.literal(xText).withColor(valueColor))
                             .append(Component.literal(" / ").withColor(intxyzColor))
@@ -105,23 +108,29 @@ public class HudRenderer {
                     needsSeparator = true;
                 }
 
-                if (RTHudsConfigScreen.showYawPitch) {
+                if (ModConfig.showYaw()) {
                     if (needsSeparator) line.append(Component.literal(" | ").withColor(valueColor));
                     line.append(Component.literal("Yaw: ").withColor(intyawColor))
-                            .append(Component.literal(String.format(Locale.US, "%.1f", yaw)).withColor(valueColor))
-                            .append(Component.literal(" Pitch: ").withColor(intpitchColor))
-                            .append(Component.literal(String.format(Locale.US, "%.1f", pitch)).withColor(valueColor));
+                            .append(Component.literal(String.format(Locale.US, "%.1f", yaw)).withColor(valueColor));
                     needsSeparator = true;
                 }
 
-                if (RTHudsConfigScreen.showDirection) {
+                if (ModConfig.showPitch()) {
+                    if (needsSeparator) {
+                        if (ModConfig.showCoordinates() && !ModConfig.showYaw()) line.append(Component.literal(" | ").withColor(valueColor));
+                        line.append(Component.literal(" Pitch: ").withColor(intpitchColor))
+                                .append(Component.literal(String.format(Locale.US, "%.1f", pitch)).withColor(valueColor));
+                    }
+                }
+
+                if (ModConfig.showDirection()) {
                     if (needsSeparator) line.append(Component.literal(" | ").withColor(valueColor));
                     line.append(Component.translatable("rthuds.hud.direction").withColor(intdirectionColor))
                             .append(getDirection(player).copy().setStyle(Style.EMPTY.withColor(valueColor)));
                     needsSeparator = true;
                 }
 
-                if (RTHudsConfigScreen.showFPS) {
+                if (ModConfig.showFPS()) {
                     if (needsSeparator) line.append(Component.literal(" | ").withColor(valueColor));
                     line.append(Component.literal("FPS: ").withColor(intfpsColor))
                             .append(Component.literal(String.valueOf(mc.getFps())).withColor(valueColor));
@@ -131,22 +140,24 @@ public class HudRenderer {
                 addNetherCoords(lines, player, valueColor, intnetherColor);
                 break;
 
-            case LAYOUT_2:
-                if (RTHudsConfigScreen.showCoords) {
+            case VERTICAL:
+                if (ModConfig.showCoordinates()) {
                     lines.add(Component.literal("X: ").withColor(intxyzColor).append(Component.literal(xText).withColor(valueColor)));
                     lines.add(Component.literal("Y: ").withColor(intxyzColor).append(Component.literal(yText).withColor(valueColor)));
                     lines.add(Component.literal("Z: ").withColor(intxyzColor).append(Component.literal(zText).withColor(valueColor)));
                 }
-                if (RTHudsConfigScreen.showYawPitch) {
+                if (ModConfig.showYaw()) {
                     lines.add(Component.literal("Yaw: ").withColor(intyawColor).append(Component.literal(String.format(Locale.US, "%.1f", yaw)).withColor(valueColor)));
+                }
+                if (ModConfig.showPitch()) {
                     lines.add(Component.literal("Pitch: ").withColor(intpitchColor).append(Component.literal(String.format(Locale.US, "%.1f", pitch)).withColor(valueColor)));
                 }
-                if (RTHudsConfigScreen.showDirection) {
+                if (ModConfig.showDirection()) {
                     lines.add(Component.translatable("rthuds.hud.direction").withColor(intdirectionColor)
                             .append(Component.literal(" "))
                             .append(getDirection(player).copy().setStyle(Style.EMPTY.withColor(valueColor))));
                 }
-                if (RTHudsConfigScreen.showFPS) {
+                if (ModConfig.showFPS()) {
                     lines.add(Component.literal("FPS: ").withColor(intfpsColor).append(Component.literal(String.valueOf(mc.getFps())).withColor(valueColor)));
                 }
                 addNetherCoords(lines, player, valueColor, intnetherColor);
@@ -165,13 +176,13 @@ public class HudRenderer {
         int screenWidth = mc.getWindow().getGuiScaledWidth();
         int screenHeight = mc.getWindow().getGuiScaledHeight();
 
-        double xPercent = Mth.clamp(RTHudsConfigScreen.hudXPercent, 0, 100);
-        double yPercent = Mth.clamp(RTHudsConfigScreen.hudYPercent, 0, 100);
+        double xPercent = Mth.clamp(ModConfig.infoHudPosX(), 0, 100);
+        double yPercent = Mth.clamp(ModConfig.infoHudPosY(), 0, 100);
 
         int startX = (int) ((screenWidth - maxWidth) * (xPercent / 100.0));
         int startY = (int) ((screenHeight - totalHeight) * (yPercent / 100.0));
 
-        int backgroundColor = switch (RTHudsConfigScreen.backgroundStyle) {
+        int backgroundColor = switch (ModConfig.infoHudBackground()) {
             case LIGHT -> 0x80000000;
             case FULL -> 0xFF000000;
             default -> 0;
@@ -195,12 +206,12 @@ public class HudRenderer {
                 lineX = startX;
             }
 
-            guiGraphics.text(mc.font, lineItem, lineX, lineY, 0xFFFFFFFF, RTHudsConfigScreen.textShadow);
+            guiGraphics.text(mc.font, lineItem, lineX, lineY, 0xFFFFFFFF, ModConfig.InfoTextShadow());
         }
     }
 
     private static void addNetherCoords(List<Component> lines, LocalPlayer player, int valueColor, int intnetherColor) {
-        if (!RTHudsConfigScreen.toggleNetherCoordinateConversion || player.level() == null) return;
+        if (!ModConfig.showCoordinatesConverter()) return;
 
         boolean isOverworld = player.level().dimension() == Level.OVERWORLD;
         boolean isNether = player.level().dimension() == Level.NETHER;

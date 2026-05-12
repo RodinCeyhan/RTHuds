@@ -3,11 +3,11 @@
   "id": "rthuds",
   "version": "${mod_version}",
   "name": "RTHuds",
-  "description": "A modern, modular, and fully customizable HUD system for Minecraft designed for flexibility and performance across all gameplay styles.",
+  "description": "Coordinates show yaw, pitch, direction, fps, converter and armor information.",
   "authors": [
     "RodinToprak"
   ],
-  "license": "MIT",
+  "license": "${license}",
   "icon": "assets/rthuds/textures/rthuds.png",
   "environment": "client",
   "entrypoints": {
@@ -20,7 +20,11 @@
     "fabricloader": "*",
     "minecraft": ">=26.1",
     "java": ">=21",
-    "midnightlib": "*"
+    "yet_another_config_lib_v3": ">=${yacl_version}"
+  },
+  "contact": {
+    "sources": "https://github.com/RodinCeyhan/RTHuds",
+    "issues": "https://github.com/RodinCeyhan/RTHuds/issues"
   },
   "recommends": {
     "modmenu": "*"
