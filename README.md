@@ -82,20 +82,10 @@ Choose your preferred platform to download RTHuds.
 <div align="center">
 
 **General Settings:**
-<img width="1366" height="768" alt="General" src="https://github.com/user-attachments/assets/10dfa8d3-fb8e-4318-ac33-d1559741210d" />
 
 **Appearance Settings:**
-<img width="1366" height="768" alt="Appearance" src="https://github.com/user-attachments/assets/93238adc-2688-4322-bc79-1a7d8c8ef5ac" />
 
 **Color Settings:**
-<img width="1366" height="768" alt="Color" src="https://github.com/user-attachments/assets/e56a516b-b69b-4081-a5c4-56d3c2685725" />
 
 **Impression Settings:**
-<img width="1366" height="768" alt="Display" src="https://github.com/user-attachments/assets/aaa64a85-0568-4828-94c3-0f4af19f89e6" />
 </div>
-
-## Credits
-
-Some implementation ideas and UI preview concepts were inspired by existing Fabric mods such as Zoomify and Effect Timer Plus.
-
-RTHuds was independently developed and does not contain copied source code from these projects.
