@@ -18,7 +18,7 @@
   },
   "depends": {
     "fabricloader": "*",
-    "minecraft": ">=26.1",
+    "minecraft": "${minecraft_version_range}",
     "java": ">=21",
     "yet_another_config_lib_v3": ">=${yacl_version}"
   },

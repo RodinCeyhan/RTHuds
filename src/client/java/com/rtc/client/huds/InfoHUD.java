@@ -1,12 +1,22 @@
-package com.rtc.client.hud;
+package com.rtc.client.huds;
 
-import com.rtc.client.gui.ModConfig;
+import com.rtc.client.config.ModConfig;
+//? if >=26.1.2{
 import net.fabricmc.fabric.api.client.rendering.v1.hud.HudElementRegistry;
+//?} else {
+/*import net.fabricmc.fabric.api.client.rendering.v1.HudRenderCallback;
+ */
+//?}
 import net.minecraft.client.DeltaTracker;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
+//? if >=26.1.2 {
 import net.minecraft.client.gui.GuiGraphicsExtractor;
+//?} else {
+/*import net.minecraft.client.gui.GuiGraphics;
+ */
+//?}
 import net.minecraft.client.Minecraft;
 import net.minecraft.network.chat.Style;
 import net.minecraft.util.Mth;
@@ -17,20 +27,27 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
+//? if >=26.1.2{
 import static com.rtc.client.RTHudsClient.HUD_ID;
+//?}
 
-@SuppressWarnings("SpellCheckingInspection")
-public class HudRenderer {
+@SuppressWarnings({"SpellCheckingInspection", "CommentedOutCode"})
+public class InfoHUD {
 
     private static DecimalFormat dfX, dfY, dfZ;
     private static int lastDecimalPlaces = -1;
     private static boolean registered = false;
 
     public static void register() {
+        //? if >=26.1.2{
         if (!registered) {
-            HudElementRegistry.addLast(HUD_ID, HudRenderer::onRender);
+            HudElementRegistry.addLast(HUD_ID, InfoHUD::onRender);
             registered = true;
         }
+        //?} else {
+        /* HudRenderCallback.EVENT.register(InfoHUD::onRender);
+         */
+        //?}
     }
 
     private static void updateFormatters(int decimalPlaces) {
@@ -61,11 +78,21 @@ public class HudRenderer {
     }
 
     @SuppressWarnings("SpellCheckingInspection")
+    //? if >=26.1.2 {
     private static void onRender(GuiGraphicsExtractor guiGraphics, DeltaTracker deltaTracker) {
+    //?} else {
+    /*private static void onRender(GuiGraphics guiGraphics, DeltaTracker deltaTracker) {
+     */
+    //?}
         if (!ModConfig.InfoHud()) return;
 
         Minecraft mc = Minecraft.getInstance();
-        if (ModConfig.HideGui() && mc.options.hideGui) return;
+        //? if =26.2 {
+        if (ModConfig.HideGui() && mc.gui.hud.isHidden()) return;
+        //?} else {
+        /*if (ModConfig.HideGui() && mc.options.hideGui) return;
+         */
+        //?}
         if (ModConfig.DebugGui() && mc.getDebugOverlay().showDebugScreen()) return;
 
         LocalPlayer player = mc.player;
@@ -73,9 +100,20 @@ public class HudRenderer {
 
         updateFormatters(ModConfig.infoHudDecimalPlaces());
 
-        var camera = mc.gameRenderer.getMainCamera();
+        //? if =26.2 {
+        var camera = mc.gameRenderer.mainCamera();
         float yaw = Mth.wrapDegrees(camera.yRot());
         float pitch = camera.xRot();
+        //?} else if >=1.21.11 {
+        /*var camera = mc.gameRenderer.getMainCamera();
+        float yaw = Mth.wrapDegrees(camera.yRot());
+        float pitch = camera.xRot();*/
+        //?} else {
+        /*var camera = mc.gameRenderer.getMainCamera();
+        float yaw = Mth.wrapDegrees(camera.getYRot());
+        float pitch = camera.getXRot();
+        */
+        //?}
 
         List<Component> lines = new ArrayList<>();
         int valueColor = 0xFFFFFF;
@@ -126,6 +164,7 @@ public class HudRenderer {
                 if (ModConfig.showDirection()) {
                     if (needsSeparator) line.append(Component.literal(" | ").withColor(valueColor));
                     line.append(Component.translatable("rthuds.hud.direction").withColor(intdirectionColor))
+                            .append(Component.literal(": "))
                             .append(getDirection(player).copy().setStyle(Style.EMPTY.withColor(valueColor)));
                     needsSeparator = true;
                 }
@@ -154,7 +193,7 @@ public class HudRenderer {
                 }
                 if (ModConfig.showDirection()) {
                     lines.add(Component.translatable("rthuds.hud.direction").withColor(intdirectionColor)
-                            .append(Component.literal(" "))
+                            .append(Component.literal(": "))
                             .append(getDirection(player).copy().setStyle(Style.EMPTY.withColor(valueColor))));
                 }
                 if (ModConfig.showFPS()) {
@@ -206,7 +245,11 @@ public class HudRenderer {
                 lineX = startX;
             }
 
+            //? if >=26.1.2 {
             guiGraphics.text(mc.font, lineItem, lineX, lineY, 0xFFFFFFFF, ModConfig.InfoTextShadow());
+            //?} else {
+            /*guiGraphics.drawString(mc.font, lineItem, lineX, lineY, 0xFFFFFFFF, ModConfig.InfoTextShadow());*/
+            //?}
         }
     }
 

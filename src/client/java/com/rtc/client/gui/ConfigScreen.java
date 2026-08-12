@@ -1,12 +1,18 @@
 package com.rtc.client.gui;
 
+import com.rtc.client.config.ModConfig;
 import dev.isxander.yacl3.api.*;
 import dev.isxander.yacl3.api.controller.*;
 
 import dev.isxander.yacl3.gui.controllers.cycling.EnumController;
 import dev.isxander.yacl3.gui.image.ImageRenderer;
 import net.minecraft.client.Minecraft;
+//? if >=26.1.2 {
 import net.minecraft.client.gui.GuiGraphicsExtractor;
+//?} else {
+/*import net.minecraft.client.gui.GuiGraphics;
+ */
+//?}
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.ItemStack;
@@ -18,7 +24,7 @@ import java.util.function.IntBinaryOperator;
 import java.util.function.IntUnaryOperator;
 import java.util.List;
 
-@SuppressWarnings("SpellCheckingInspection")
+@SuppressWarnings({"SpellCheckingInspection", "unused"})
 public class ConfigScreen {
 
     public static Screen create(Screen parent) {
@@ -338,7 +344,12 @@ public class ConfigScreen {
         public int armorHudText = options.armorHudHealthColor;
 
         @Override
+        //? if >=26.1.2 {
         public int render(GuiGraphicsExtractor graphics, int x, int startY, int width, float delta) {
+        //?} else {
+        /*public int render(GuiGraphics graphics, int x, int startY, int width, float delta) {
+        */
+        //?}
             Minecraft mc = Minecraft.getInstance();
 
             int py = startY + 5;
@@ -394,19 +405,35 @@ public class ConfigScreen {
                     case REMAININGMAX -> armorHealthText = values[i] + "/" + values[i];
                 }
 
+                //? if >=26.1.2 {
                 graphics.item(armorItems[i], x, yOffset);
+                //?} else {
+                /*graphics.renderItem(armorItems[i], x, yOffset);*/
+                //?}
 
+                //?if >=26.1.2 {
                 if (!armorHealthText.isEmpty()) {
                     graphics.text(Minecraft.getInstance().font, armorHealthText, x + 16 + 4, yOffset + 4, armorHudText, ModConfig.ArmorTextShadow());
                 } else {
                     graphics.text(Minecraft.getInstance().font, "%100", x + 16 + 4, yOffset + 4, armorHudText, ModConfig.ArmorTextShadow());
                 }
+                //?} else {
+                /*if (!armorHealthText.isEmpty()) {
+                    graphics.drawString(Minecraft.getInstance().font, armorHealthText, x + 16 + 4, yOffset + 4, armorHudText, ModConfig.ArmorTextShadow());
+                } else {
+                    graphics.drawString(Minecraft.getInstance().font, "%100", x + 16 + 4, yOffset + 4, armorHudText, ModConfig.ArmorTextShadow());
+                }*/
+                //?}
             }
 
             for (int i = 0; i < lines.size(); i++) {
                 Component lineItem = lines.get(i);
                 int lineY = py + (i * (textHeight + lineSpacing));
+                //?if >=26.1.2 {
                 graphics.text(mc.font, lineItem, x, lineY, 0xFFFFFFFF, options.infoHudTextShadow);
+                //?} else {
+                /*graphics.drawString(mc.font, lineItem, x, lineY, 0xFFFFFFFF, options.infoHudTextShadow);*/
+                //?}
             }
 
             return 20;

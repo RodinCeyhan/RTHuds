@@ -5,7 +5,12 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.components.SpriteIconButton;
 import net.minecraft.client.gui.layouts.HeaderAndFooterLayout;
 import net.minecraft.client.gui.screens.options.OptionsScreen;
+//? if >=1.21.11 {
 import net.minecraft.resources.Identifier;
+//?} else {
+/*import net.minecraft.resources.ResourceLocation;
+ */
+//?}
 import org.spongepowered.asm.mixin.*;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
@@ -34,8 +39,17 @@ public abstract class OptionsScreenMixin extends Screen {
     @Unique
     SpriteIconButton rthudssettingsbtn = SpriteIconButton.builder(
                     Component.translatable("rthuds"),
-                    (buttonWidget) -> client.setScreen(ConfigScreen.create(client.screen)), true)
+                    //? if =26.2{
+                    (buttonWidget) -> client.gui.setScreen(ConfigScreen.create(client.gui.screen())), true)
+                    //?} else {
+                    /*(buttonWidget) -> client.setScreen(ConfigScreen.create(client.screen)), true)
+                     */
+                    //?}
+            //? if >=1.21.11 {
             .sprite(Identifier.fromNamespaceAndPath(MOD_ID, "icon/" + MOD_ID), 9, 9).size(20, 20).build();
+            //?} else {
+            /*.sprite(ResourceLocation.fromNamespaceAndPath(MOD_ID, "icon/" + MOD_ID), 9, 9).size(20, 20).build();*/
+            //?}
 
     @Mutable
     @Unique

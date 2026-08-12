@@ -1,4 +1,4 @@
-package com.rtc.client.gui;
+package com.rtc.client.config;
 
 import com.rtc.client.RTHudsClient;
 import com.rtc.client.util.Log;
@@ -8,14 +8,23 @@ import dev.isxander.yacl3.config.v2.api.SerialEntry;
 import dev.isxander.yacl3.config.v2.api.serializer.GsonConfigSerializerBuilder;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.network.chat.Component;
+//? if >=1.21.11 {
 import net.minecraft.resources.Identifier;
-import java.io.*;
+//?} else {
+/*import net.minecraft.resources.ResourceLocation;
+ */
+//?}
 
 @SuppressWarnings("SpellCheckingInspection")
 public class ModConfig {
 
     public static ConfigClassHandler<ModConfig> INSTANCE = ConfigClassHandler.createBuilder(ModConfig.class)
+            //? if >=1.21.11 {
             .id(Identifier.fromNamespaceAndPath(RTHudsClient.MOD_ID, "config"))
+            //?} else {
+            /*.id(ResourceLocation.fromNamespaceAndPath(RTHudsClient.MOD_ID, "config"))
+             */
+            //?}
             .serializer(config -> GsonConfigSerializerBuilder.create(config)
                     .setPath(FabricLoader.getInstance().getConfigDir().resolve("RTHuds").resolve("rthuds.json")).build()).build();
 
