@@ -1,7 +1,7 @@
 <div align="center">
 	
 # RTHUDS
-<img src="https://img.shields.io/badge/Version-1.21.X%20--%2026.1.X-blue?&color=ECEBE6&&labelColor=2F4858&style=for-the-badge" alt="Version">
+<img src="https://img.shields.io/badge/Version-1.21.X%20--%2026.2-blue?&color=ECEBE6&&labelColor=2F4858&style=for-the-badge" alt="Version">
 
 <img src="https://img.shields.io/badge/Loader-Fabric%20Quilt-orange?&color=ECEBE6&&labelColor=2F4858&style=for-the-badge" alt="Fabric & Quilt">
 
@@ -74,18 +74,3 @@ Choose your preferred platform to download RTHuds.
 - Show Direction
 - Show FPS
 - Show Coordinate Converter
-  
-<br>
-
-## Images:
-
-<div align="center">
-
-**General Settings:**
-
-**Appearance Settings:**
-
-**Color Settings:**
-
-**Impression Settings:**
-</div>
