@@ -13,7 +13,7 @@ build/
 .classpath
 .project
 bin/
-
+lib/
 run/
 remappedSrc/
 .factorypath
