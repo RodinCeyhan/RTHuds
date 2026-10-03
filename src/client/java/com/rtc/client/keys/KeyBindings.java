@@ -8,7 +8,9 @@ import net.fabricmc.fabric.api.client.keymapping.v1.KeyMappingHelper;
 //?}
 import net.minecraft.client.KeyMapping;
 import com.mojang.blaze3d.platform.InputConstants;
-import org.lwjgl.glfw.GLFW;
+//? if <=26.2 {
+/*import org.lwjgl.glfw.GLFW;*/
+//?}
 //? if >=1.21.11 {
 import net.minecraft.resources.Identifier;
 //?}
@@ -31,8 +33,13 @@ public class KeyBindings {
          */
         //?}
                 "key.rthuds.toggle",
-                InputConstants.Type.KEYSYM,
-                GLFW.GLFW_KEY_K,
+                //? if >=26.3 {
+                InputConstants.Type.KEYBOARD,
+                InputConstants.KEY_K,
+                //?} else {
+                /*InputConstants.Type.KEYSYM,
+                GLFW.GLFW_KEY_K,*/
+                //?}
                 //? if >=1.21.11 {
                 RTHUDS_CATEGORY
                 //?} else {
@@ -47,8 +54,13 @@ public class KeyBindings {
          */
         //?}
                 "key.rthuds.settignsmenu",
-                InputConstants.Type.KEYSYM,
-                GLFW.GLFW_KEY_N,
+                //? if >=26.3 {
+                InputConstants.Type.KEYBOARD,
+                InputConstants.KEY_N,
+                //?} else {
+                /*InputConstants.Type.KEYSYM,
+                GLFW.GLFW_KEY_N,*/
+                //?}
                 //? if >=1.21.11 {
                 RTHUDS_CATEGORY
                 //?} else {
@@ -63,8 +75,13 @@ public class KeyBindings {
          */
         //?}
                 "key.rthuds.togglearmor",
-                InputConstants.Type.KEYSYM,
-                GLFW.GLFW_KEY_J,
+                //? if >=26.3 {
+                InputConstants.Type.KEYBOARD,
+                InputConstants.KEY_J,
+                //?} else {
+                /*InputConstants.Type.KEYSYM,
+                GLFW.GLFW_KEY_J,*/
+                //?}
                 //? if >=1.21.11 {
                 RTHUDS_CATEGORY
                 //?} else {
