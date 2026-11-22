@@ -1,8 +1,9 @@
 package com.rtc.client.mixin;
 
-import com.rtc.client.gui.ConfigScreen;
+import com.rtc.client.RTHudsClient;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.components.SpriteIconButton;
+import net.minecraft.client.gui.components.Tooltip;
 import net.minecraft.client.gui.layouts.HeaderAndFooterLayout;
 import net.minecraft.client.gui.screens.options.OptionsScreen;
 //? if >=1.21.11 {
@@ -39,17 +40,12 @@ public abstract class OptionsScreenMixin extends Screen {
     @Unique
     SpriteIconButton rthudssettingsbtn = SpriteIconButton.builder(
                     Component.translatable("rthuds"),
-                    //? if =26.2{
-                    (buttonWidget) -> client.gui.setScreen(ConfigScreen.create(client.gui.screen())), true)
-                    //?} else {
-                    /*(buttonWidget) -> client.setScreen(ConfigScreen.create(client.screen)), true)
-                     */
-                    //?}
+                    (buttonWidget) -> RTHudsClient.openEditor(Minecraft.getInstance()), true)
             //? if >=1.21.11 {
-            .sprite(Identifier.fromNamespaceAndPath(MOD_ID, "icon/" + MOD_ID), 9, 9).size(20, 20).build();
-            //?} else {
-            /*.sprite(ResourceLocation.fromNamespaceAndPath(MOD_ID, "icon/" + MOD_ID), 9, 9).size(20, 20).build();*/
-            //?}
+            .sprite(Identifier.fromNamespaceAndPath(MOD_ID, "settings"), 9, 9).size(20, 20).build();
+    //?} else {
+    /*.sprite(ResourceLocation.fromNamespaceAndPath(MOD_ID, "settings"), 9, 9).size(20, 20).build();*/
+    //?}
 
     @Mutable
     @Unique
@@ -72,6 +68,8 @@ public abstract class OptionsScreenMixin extends Screen {
         }
 
         if (buttons.isEmpty()) return;
+
+        rthudssettingsbtn.setTooltip(Tooltip.create(Component.translatable("rthuds.settings")));
 
         Button telemetryButton = null;
         Button resourcePackButton = null;

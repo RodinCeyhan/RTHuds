@@ -4,7 +4,11 @@
   "package": "com.rtc.client.mixin",
   "compatibilityLevel": "JAVA_21",
   "client": [
-    "OptionsScreenMixin"
+    "OptionsScreenMixin",
+    "MouseClickMixin",
+    "HudAccessor",
+    "HotbarOffhandMixin",
+    "VanillaEffectsMixin"
   ],
   "injectors": {
     "defaultRequire": 1

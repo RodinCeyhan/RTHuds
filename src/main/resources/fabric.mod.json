@@ -19,8 +19,7 @@
   "depends": {
     "fabricloader": "*",
     "minecraft": "${minecraft_version_range}",
-    "java": ">=21",
-    "yet_another_config_lib_v3": ">=${yacl_version}"
+    "java": ">=21"
   },
   "contact": {
     "sources": "https://github.com/RodinCeyhan/RTHuds",

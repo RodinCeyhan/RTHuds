@@ -28,10 +28,10 @@ public class KeyBindings {
     public static void register() {
         //? if >=26.1.2 {
         toggleHud = KeyMappingHelper.registerKeyMapping(new KeyMapping(
-        //?} else {
-        /*toggleHud = KeyBindingHelper.registerKeyBinding(new KeyMapping(
-         */
-        //?}
+                //?} else {
+                /*toggleHud = KeyBindingHelper.registerKeyBinding(new KeyMapping(
+                 */
+                //?}
                 "key.rthuds.toggle",
                 //? if >=26.3 {
                 InputConstants.Type.KEYBOARD,
@@ -49,10 +49,10 @@ public class KeyBindings {
 
         //? if >=26.1.2 {
         openConfig = KeyMappingHelper.registerKeyMapping(new KeyMapping(
-        //?} else {
-        /*openConfig = KeyBindingHelper.registerKeyBinding(new KeyMapping(
-         */
-        //?}
+                //?} else {
+                /*openConfig = KeyBindingHelper.registerKeyBinding(new KeyMapping(
+                 */
+                //?}
                 "key.rthuds.settignsmenu",
                 //? if >=26.3 {
                 InputConstants.Type.KEYBOARD,
@@ -70,10 +70,10 @@ public class KeyBindings {
 
         //? if >=26.1.2 {
         toggleArmorHud = KeyMappingHelper.registerKeyMapping(new KeyMapping(
-        //?} else {
-        /*toggleArmorHud = KeyBindingHelper.registerKeyBinding(new KeyMapping(
-         */
-        //?}
+                //?} else {
+                /*toggleArmorHud = KeyBindingHelper.registerKeyBinding(new KeyMapping(
+                 */
+                //?}
                 "key.rthuds.togglearmor",
                 //? if >=26.3 {
                 InputConstants.Type.KEYBOARD,

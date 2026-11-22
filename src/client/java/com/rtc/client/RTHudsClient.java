@@ -1,11 +1,8 @@
 package com.rtc.client;
 
 import com.rtc.client.command.HudsCommand;
-import com.rtc.client.huds.ArmorHUD;
+import com.rtc.client.huds.*;
 import com.rtc.client.keys.KeyBindings;
-import com.rtc.client.gui.ConfigScreen;
-import com.rtc.client.config.ModConfig;
-import com.rtc.client.huds.InfoHUD;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.minecraft.ChatFormatting;
@@ -21,62 +18,54 @@ public class RTHudsClient implements ClientModInitializer {
     public static final String MOD_ID = "rthuds";
 
     //? if >=26.1.2 {
-    public static final Identifier HUD_ID = Identifier.fromNamespaceAndPath("rthuds", "hud");
     public static final Identifier ARMOR_ID = Identifier.fromNamespaceAndPath("rthuds", "armor");
     //?}
-    public static boolean settingsMenu = false;
 
     @Override
     public void onInitializeClient() {
-        ModConfig.INSTANCE.load();
         KeyBindings.register();
-        InfoHUD.register();
-        ArmorHUD.register();
         HudsCommand.register();
+        InfoHudElements.register();
+        HudRegistry.load();
+        HudOverlay.register();
 
-        Runtime.getRuntime().addShutdownHook(new Thread(() -> ModConfig.INSTANCE.save()));
 
         ClientTickEvents.END_CLIENT_TICK.register(client -> {
             Minecraft mc = Minecraft.getInstance();
             if (mc.player == null) return;
+            ArmorHudRenderer.tickWarning(mc);
 
             if (KeyBindings.toggleHud.consumeClick()) {
-                boolean state = ModConfig.toggleHud(ModConfig.keyHudType.INFO);
+                HudConfig.infoHud = !HudConfig.InfoHud();
+                boolean state = HudConfig.InfoHud();
                 sendHudMessage("rthuds.settings.hud", state);
             }
 
             if (KeyBindings.openConfig.consumeClick()) {
                 if (client.player != null) {
-                    //? if =26.2 {
-                    client.gui.setScreen(ConfigScreen.create(client.gui.screen()));
-                    //?} else {
-                    /*client.setScreen(ConfigScreen.create(client.screen));
-                     */
-                    //?}
+                    openEditor(mc);
                 }
             }
 
             if (KeyBindings.toggleArmorHud.consumeClick()) {
-                boolean state = ModConfig.toggleHud(ModConfig.keyHudType.ARMOR);
-                sendHudMessage("rthuds.settings.armorhud", state);
+                ArmorHudConfig.enabled = !ArmorHudConfig.enabled;
+                HudRegistry.save();
+                sendHudMessage("rthuds.settings.armorhud", ArmorHudConfig.enabled);
             }
 
         });
-
-        ClientTickEvents.END_CLIENT_TICK.register(this::settingsMenuTick);
     }
 
-    private void settingsMenuTick(Minecraft minecraft) {
-        if (settingsMenu) {
-            settingsMenu = false;
-            Minecraft client = Minecraft.getInstance();
-            //? if =26.2 {
-            client.gui.setScreen(ConfigScreen.create(client.gui.screen()));
-            //?} else {
-            /*client.setScreen(ConfigScreen.create(client.screen));
+
+    public static void openEditor(Minecraft mc) {
+        mc.execute(() -> {
+//? if >=26.2 {
+            mc.gui.setScreen(new HudEditorScreen());
+//?} else {
+            /*        mc.setScreen(new HudEditorScreen());
              */
-            //?}
-        }
+//?}
+        });
     }
 
     private void sendHudMessage(String key, boolean state) {
@@ -103,8 +92,5 @@ public class RTHudsClient implements ClientModInitializer {
              */
             //?}
         }
-    }
-
-    public static void onConfigSaved(ModConfig config) {
     }
 }
